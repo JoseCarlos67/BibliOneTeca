@@ -35,4 +35,8 @@ public class BookService {
       e.printStackTrace();
     }
   }
+
+  public void deleteAll() {
+    repository.deleteAll();
+  }
 }
