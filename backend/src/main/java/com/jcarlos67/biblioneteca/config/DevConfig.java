@@ -35,6 +35,10 @@ public class DevConfig implements CommandLineRunner {
       Book b2 = new Book("A Game of Thrones");
       Book b3 = new Book("The Shining");
 
+      b1.getAuthorSet().add(auth1);
+      b2.getAuthorSet().add(auth2);
+      b3.getAuthorSet().add(auth3);
+
       bookRepository.saveAll(Arrays.asList(b1, b2, b3));
 
       System.out.println("Banco de dados populado com sucesso!");

@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +33,9 @@ public class Author implements Serializable {
   @NotNull(message = "The nationality cannot be null!")
   @Column(nullable = false)
   private String nationality;
+
+  @ManyToMany(mappedBy = "authorSet")
+  private Set<Book> bookSet = new HashSet<>();
 
   public Author() {
   }
