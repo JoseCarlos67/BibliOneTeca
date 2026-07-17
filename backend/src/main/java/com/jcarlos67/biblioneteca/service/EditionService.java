@@ -1,8 +1,8 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.model.Book;
-import com.jcarlos67.biblioneteca.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.jcarlos67.biblioneteca.model.Edition;
+import com.jcarlos67.biblioneteca.repository.EditionRepository;
+import org.antlr.v4.runtime.atn.SemanticContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +11,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class BookService {
-  @Autowired
-  private BookRepository repository;
+public class EditionService {
+  private EditionRepository repository;
 
-  public List<Book> findAll() {
+  public List<Edition> findAll() {
     return repository.findAll();
   }
 
-  public Book findById(UUID id) {
-    Optional<Book> book = repository.findById(id);
-    return book.get();
+  public Edition findByIdbn(String isbn) {
+    Optional<Edition> edition = repository.findByIsbn(isbn);
+    return edition.get();
   }
 
-  public Book insert(Book book) {
-    return repository.save(book);
+  public Edition insert(Edition edition) {
+    return repository.save(edition);
   }
 
   public void delete(UUID id) {
