@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ public class Book implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
   @Setter(AccessLevel.NONE)
   private UUID id;
 

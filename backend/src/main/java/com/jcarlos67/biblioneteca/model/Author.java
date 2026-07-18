@@ -2,8 +2,10 @@ package com.jcarlos67.biblioneteca.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -21,6 +23,8 @@ public class Author implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
+  @Setter(AccessLevel.NONE)
   private UUID id;
 
   @NotNull(message = "The name cannot be null!")
