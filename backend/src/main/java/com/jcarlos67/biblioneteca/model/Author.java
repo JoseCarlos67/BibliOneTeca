@@ -27,18 +27,12 @@ public class Author implements Serializable {
   @Setter(AccessLevel.NONE)
   private UUID id;
 
-  @NotNull(message = "The name cannot be null!")
-  @Column(nullable = false)
+
   private String name;
-
-  @NotNull(message = "The date of birth cannot be null!")
-  @Column(nullable = false)
   private LocalDate dateOfBirth;
-
   private LocalDate dateOfDeath;
 
   @NotNull(message = "The nationality cannot be null!")
-  @Column(nullable = false)
   private String nationality;
 
   @ManyToMany(mappedBy = "authorSet")

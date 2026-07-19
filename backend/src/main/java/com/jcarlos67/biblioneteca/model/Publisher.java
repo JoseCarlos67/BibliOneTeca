@@ -1,7 +1,6 @@
 package com.jcarlos67.biblioneteca.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,10 +13,10 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table (name = "books")
+@Table(name = "publishers")
 @Getter
 @Setter
-public class Book implements Serializable {
+public class Publisher implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -26,36 +25,34 @@ public class Book implements Serializable {
   @Setter(AccessLevel.NONE)
   private UUID id;
 
-  private String name;
+  private String legalName;
+  private String tradeName;
+  private String cnpj;
+  private String siteUrl;
 
-  @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private Set<Edition> editions = new HashSet<>();
 
-  @ManyToMany()
-  @JoinTable(
-          name = "author_book",
-          joinColumns = @JoinColumn(name = "fk_book"),
-          inverseJoinColumns = @JoinColumn(name = "fk_author")
-  )
-  private Set<Author> authorSet = new HashSet<>();
-
-  public Book() {
+  public Publisher() {
   }
 
-  public Book(String name) {
+  public Publisher(String legalName, String tradeName, String cnpj, String siteUrl) {
     this.id = null;
-    this.name = name;
+    this.legalName = legalName;
+    this.tradeName = tradeName;
+    this.cnpj = cnpj;
+    this.siteUrl = siteUrl;
   }
 
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
-    Book book = (Book) o;
-    return Objects.equals(getId(), book.getId()) && Objects.equals(getName(), book.getName());
+    Publisher publisher = (Publisher) o;
+    return Objects.equals(getId(), publisher.getId());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName());
+    return Objects.hashCode(getId());
   }
 }

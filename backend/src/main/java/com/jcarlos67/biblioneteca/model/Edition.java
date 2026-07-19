@@ -46,10 +46,18 @@ public class Edition implements Serializable {
   @Lob
   private String synopsis;
 
+  @ManyToOne
+  @JoinColumn(name = "fk_book")
+  private Book book;
+
+  @ManyToOne
+  @JoinColumn(name = "fk_publisher")
+  private Publisher publisher;
+
   public Edition(){
   }
 
-  public Edition(String isbn, Integer edition_number, int year_publication, String language, int page_number, String cover, String synopsis) {
+  public Edition(String isbn, Integer edition_number, int year_publication, String language, int page_number, String cover, String synopsis, Book book, Publisher publisher) {
     this.id = null;
     this.isbn = isbn;
     this.edition_number = edition_number;
@@ -58,6 +66,8 @@ public class Edition implements Serializable {
     this.page_number = page_number;
     this.cover = cover;
     this.synopsis = synopsis;
+    this.book = book;
+    this.publisher = publisher;
   }
 
   @Override
