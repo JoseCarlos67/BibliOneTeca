@@ -17,8 +17,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             // Define as regras de autorização de rotas
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/books/**", "/authors/**").permitAll() // Libera essas rotas publicamente
-                    .anyRequest().authenticated() // Qualquer outra rota ainda exigirá login
+                    .anyRequest().permitAll()
             )
             // Desabilita o redirecionamento automático para a tela de login web do Spring
             .formLogin(form -> form.disable())
