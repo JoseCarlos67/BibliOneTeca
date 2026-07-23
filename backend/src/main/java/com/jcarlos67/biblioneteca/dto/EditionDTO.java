@@ -2,6 +2,7 @@ package com.jcarlos67.biblioneteca.dto;
 
 import com.jcarlos67.biblioneteca.model.Author;
 import com.jcarlos67.biblioneteca.model.Edition;
+import com.jcarlos67.biblioneteca.model.Genre;
 import com.jcarlos67.biblioneteca.model.Publisher;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class EditionDTO implements Serializable {
   private Integer edition_number;
   private int year_publication;
   private String language;
+  private Set<Genre> genre = new HashSet<>();
   private int page_number;
   private String cover;
   private String synopsis;
@@ -37,6 +39,7 @@ public class EditionDTO implements Serializable {
     this.edition_number = edition.getEdition_number();
     this.year_publication = edition.getYear_publication();
     this.language = edition.getLanguage();
+    this.genre = edition.getBook().getGenreSet();
     this.page_number = edition.getPage_number();
     this.cover = edition.getCover();
     this.synopsis = edition.getSynopsis();

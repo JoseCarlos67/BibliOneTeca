@@ -41,6 +41,15 @@ public class Book implements Serializable {
   )
   private Set<Author> authorSet = new HashSet<>();
 
+  @JsonIgnore
+  @ManyToMany()
+  @JoinTable(
+          name = "book_genre",
+          joinColumns = @JoinColumn(name = "fk_book"),
+          inverseJoinColumns = @JoinColumn(name = "fk_genre")
+  )
+  private Set<Genre> genreSet = new HashSet<>();
+
   public Book() {
   }
 

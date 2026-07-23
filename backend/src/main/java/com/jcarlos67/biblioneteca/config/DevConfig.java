@@ -3,10 +3,12 @@ package com.jcarlos67.biblioneteca.config;
 import com.jcarlos67.biblioneteca.model.Author;
 import com.jcarlos67.biblioneteca.model.Book;
 import com.jcarlos67.biblioneteca.model.Edition;
+import com.jcarlos67.biblioneteca.model.Genre;
 import com.jcarlos67.biblioneteca.model.Publisher;
 import com.jcarlos67.biblioneteca.repository.AuthorRepository;
 import com.jcarlos67.biblioneteca.repository.BookRepository;
 import com.jcarlos67.biblioneteca.repository.EditionRepository;
+import com.jcarlos67.biblioneteca.repository.GenreRepository;
 import com.jcarlos67.biblioneteca.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -30,24 +32,36 @@ public class DevConfig implements CommandLineRunner {
   @Autowired
   private PublisherRepository publisherRepository;
 
+  @Autowired
+  private GenreRepository genreRepository;
+
   @Override
   public void run(String... args) throws Exception {
+    editionRepository.deleteAll();
     bookRepository.deleteAll();
     authorRepository.deleteAll();
-    editionRepository.deleteAll();
     publisherRepository.deleteAll();
+    genreRepository.deleteAll();
 
     if (bookRepository.count() == 0) {
       // 1. Autor
       Author auth1 = new Author("J.R.R. Tolkien", LocalDate.of(1892, 1, 3), null, "British");
       authorRepository.save(auth1);
 
-      // 2. Livro
+      // 2. Gêneros
+      Genre g1 = new Genre("Fantasy");
+      Genre g2 = new Genre("High Fantasy");
+      Genre g3 = new Genre("Adventure");
+      Genre g4 = new Genre("Fiction");
+      genreRepository.saveAll(Arrays.asList(g1, g2, g3, g4));
+
+      // 3. Livro (Vinculando Autor e Gêneros)
       Book b1 = new Book("The Fellowship of the Ring");
       b1.getAuthorSet().add(auth1);
+      b1.getGenreSet().addAll(Arrays.asList(g1, g2, g3)); // Associa Fantasy, High Fantasy e Adventure
       bookRepository.save(b1);
 
-      // 3. Editoras
+      // 4. Editoras
       Publisher pub1 = new Publisher("Mariner Books", "Mariner Books", "483094208094", "www.marinerbooks.com");
       Publisher pub2 = new Publisher("HarperCollins Brasil", "HarperCollins", "12345678000199", "www.harpercollins.com.br");
       Publisher pub3 = new Publisher("Houghton Mifflin", "Houghton Mifflin Harcourt", "98765432000188", "www.hmhbooks.com");
@@ -55,7 +69,7 @@ public class DevConfig implements CommandLineRunner {
 
       publisherRepository.saveAll(Arrays.asList(pub1, pub2, pub3, pub4));
 
-      // 4. Edições
+      // 5. Edições
 
       // Edição 1: Brochura em Inglês (Mariner Books, 2012)
       Edition ed1 = new Edition(
@@ -91,7 +105,7 @@ public class DevConfig implements CommandLineRunner {
       // Salvando todas as edições em lote
       editionRepository.saveAll(Arrays.asList(ed1, ed2, ed3, ed4));
 
-      System.out.println("Banco de dados populado com sucesso! 1 livro com 4 edições cadastradas.");
+      System.out.println("Banco de dados populado com sucesso! 1 livro com 4 edições e 3 gêneros vinculados.");
     } else {
       System.out.println("O banco de dados já possui registros. Ignorando carga inicial.");
     }
