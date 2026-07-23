@@ -1,5 +1,6 @@
 package com.jcarlos67.biblioneteca.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Publisher implements Serializable {
   private String cnpj;
   private String siteUrl;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private Set<Edition> editions = new HashSet<>();
 

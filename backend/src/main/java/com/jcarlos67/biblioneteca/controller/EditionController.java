@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/editions")
 public class EditionController {
-
   @Autowired
   EditionService service;
 

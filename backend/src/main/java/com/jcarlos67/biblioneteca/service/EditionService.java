@@ -2,7 +2,7 @@ package com.jcarlos67.biblioneteca.service;
 
 import com.jcarlos67.biblioneteca.model.Edition;
 import com.jcarlos67.biblioneteca.repository.EditionRepository;
-import org.antlr.v4.runtime.atn.SemanticContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +12,14 @@ import java.util.UUID;
 
 @Service
 public class EditionService {
+  @Autowired
   private EditionRepository repository;
 
   public List<Edition> findAll() {
     return repository.findAll();
   }
 
-  public Edition findByIdbn(String isbn) {
+  public Edition findByIsbn(String isbn) {
     Optional<Edition> edition = repository.findByIsbn(isbn);
     return edition.get();
   }
