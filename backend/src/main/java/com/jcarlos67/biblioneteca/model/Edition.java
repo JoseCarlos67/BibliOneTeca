@@ -1,5 +1,6 @@
 package com.jcarlos67.biblioneteca.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -46,6 +47,7 @@ public class Edition implements Serializable {
   @Lob
   private String synopsis;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "fk_book")
   private Book book;

@@ -1,5 +1,6 @@
 package com.jcarlos67.biblioneteca.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -26,11 +27,12 @@ public class Book implements Serializable {
   @Setter(AccessLevel.NONE)
   private UUID id;
 
-  private String name;
+  private String title;
 
   @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private Set<Edition> editions = new HashSet<>();
 
+  @JsonIgnore
   @ManyToMany()
   @JoinTable(
           name = "author_book",
@@ -42,20 +44,20 @@ public class Book implements Serializable {
   public Book() {
   }
 
-  public Book(String name) {
+  public Book(String title) {
     this.id = null;
-    this.name = name;
+    this.title = title;
   }
 
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     Book book = (Book) o;
-    return Objects.equals(getId(), book.getId()) && Objects.equals(getName(), book.getName());
+    return Objects.equals(getId(), book.getId()) && Objects.equals(getTitle(), book.getTitle());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName());
+    return Objects.hash(getId(), getTitle());
   }
 }

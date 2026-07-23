@@ -33,6 +33,8 @@ public class DevConfig implements CommandLineRunner {
   public void run(String... args) throws Exception {
     bookRepository.deleteAll();
     authorRepository.deleteAll();
+    editionRepository.deleteAll();
+    publisherRepository.deleteAll();
 
     if(bookRepository.count() == 0) {
       Author auth1 = new Author("J.R.R. Tolkien", LocalDate.of(1892, 1, 3), null, "British");

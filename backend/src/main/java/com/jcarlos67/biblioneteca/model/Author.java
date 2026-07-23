@@ -1,5 +1,6 @@
 package com.jcarlos67.biblioneteca.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -35,6 +36,7 @@ public class Author implements Serializable {
   @NotNull(message = "The nationality cannot be null!")
   private String nationality;
 
+  @JsonIgnore
   @ManyToMany(mappedBy = "authorSet")
   private Set<Book> bookSet = new HashSet<>();
 
