@@ -3,6 +3,7 @@ package com.jcarlos67.biblioneteca.config;
 import com.jcarlos67.biblioneteca.model.collection.*;
 import com.jcarlos67.biblioneteca.model.collection.enums.PhysicalCopyStatus;
 import com.jcarlos67.biblioneteca.model.loans.Client;
+import com.jcarlos67.biblioneteca.model.loans.Librarian;
 import com.jcarlos67.biblioneteca.model.loans.Person;
 import com.jcarlos67.biblioneteca.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,11 @@ public class DevConfig implements CommandLineRunner {
   @Autowired
   private PhysicalCopyRepository physicalCopyRepository;
 
-  @Autowired ClientRepository clientRepository;
+  @Autowired
+  ClientRepository clientRepository;
+
+  @Autowired
+  LibrarianRepository librarianRepository;
 
   @Override
   public void run(String... args) throws Exception {
@@ -45,6 +50,7 @@ public class DevConfig implements CommandLineRunner {
     genreRepository.deleteAll();
     physicalCopyRepository.deleteAll();
     clientRepository.deleteAll();
+    librarianRepository.deleteAll();
 
     if (bookRepository.count() == 0) {
       // 1. Autor
@@ -116,6 +122,8 @@ public class DevConfig implements CommandLineRunner {
       Client client = new Client("00011122233", "José Esteves", LocalDate.of(2002, 02, 10), "jose@gmail.com", "35997665432", LocalDate.of(2026, 8, 20));
       clientRepository.save(client);
 
+      Librarian librarian = new Librarian("00011122233", "José Silva", LocalDate.of(2002, 02, 10), "jose@gmail.com", "teste");
+      librarianRepository.save(librarian);
 
 
       System.out.println("Banco de dados populado com sucesso! 1 livro com 4 edições e 3 gêneros vinculados.");
