@@ -2,6 +2,8 @@ package com.jcarlos67.biblioneteca.config;
 
 import com.jcarlos67.biblioneteca.model.collection.*;
 import com.jcarlos67.biblioneteca.model.collection.enums.PhysicalCopyStatus;
+import com.jcarlos67.biblioneteca.model.loans.Client;
+import com.jcarlos67.biblioneteca.model.loans.Person;
 import com.jcarlos67.biblioneteca.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -32,6 +34,8 @@ public class DevConfig implements CommandLineRunner {
   @Autowired
   private PhysicalCopyRepository physicalCopyRepository;
 
+  @Autowired ClientRepository clientRepository;
+
   @Override
   public void run(String... args) throws Exception {
     editionRepository.deleteAll();
@@ -40,6 +44,7 @@ public class DevConfig implements CommandLineRunner {
     publisherRepository.deleteAll();
     genreRepository.deleteAll();
     physicalCopyRepository.deleteAll();
+    clientRepository.deleteAll();
 
     if (bookRepository.count() == 0) {
       // 1. Autor
@@ -107,6 +112,9 @@ public class DevConfig implements CommandLineRunner {
       PhysicalCopy pc2 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
       PhysicalCopy pc3 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
       physicalCopyRepository.saveAll(Arrays.asList(pc1, pc2, pc3));
+
+      Client client = new Client("00011122233", "José Esteves", LocalDate.of(2002, 02, 10), "jose@gmail.com", "35997665432", LocalDate.of(2026, 8, 20));
+      clientRepository.save(client);
 
 
 
