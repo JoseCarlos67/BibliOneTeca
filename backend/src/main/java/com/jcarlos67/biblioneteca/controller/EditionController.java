@@ -1,7 +1,7 @@
 package com.jcarlos67.biblioneteca.controller;
 
 import com.jcarlos67.biblioneteca.dto.EditionDTO;
-import com.jcarlos67.biblioneteca.model.Edition;
+import com.jcarlos67.biblioneteca.model.collection.Edition;
 import com.jcarlos67.biblioneteca.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.jcarlos67.biblioneteca.repository;
 
-import com.jcarlos67.biblioneteca.model.Edition;
+import com.jcarlos67.biblioneteca.model.collection.Edition;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

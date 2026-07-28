@@ -1,6 +1,6 @@
 package com.jcarlos67.biblioneteca.controller;
 
-import com.jcarlos67.biblioneteca.model.Publisher;
+import com.jcarlos67.biblioneteca.model.collection.Publisher;
 import com.jcarlos67.biblioneteca.service.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

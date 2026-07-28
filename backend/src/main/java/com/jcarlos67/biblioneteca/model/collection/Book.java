@@ -1,8 +1,7 @@
-package com.jcarlos67.biblioneteca.model;
+package com.jcarlos67.biblioneteca.model.collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

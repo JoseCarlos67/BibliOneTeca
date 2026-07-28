@@ -1,9 +1,9 @@
 package com.jcarlos67.biblioneteca.dto;
 
-import com.jcarlos67.biblioneteca.model.Author;
-import com.jcarlos67.biblioneteca.model.Edition;
-import com.jcarlos67.biblioneteca.model.Genre;
-import com.jcarlos67.biblioneteca.model.Publisher;
+import com.jcarlos67.biblioneteca.model.collection.Author;
+import com.jcarlos67.biblioneteca.model.collection.Edition;
+import com.jcarlos67.biblioneteca.model.collection.Genre;
+import com.jcarlos67.biblioneteca.model.collection.Publisher;
 import lombok.Getter;
 import lombok.Setter;
 

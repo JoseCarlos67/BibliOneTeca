@@ -1,6 +1,6 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.model.Edition;
+import com.jcarlos67.biblioneteca.model.collection.Edition;
 import com.jcarlos67.biblioneteca.repository.EditionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

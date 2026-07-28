@@ -1,4 +1,4 @@
-package com.jcarlos67.biblioneteca.model;
+package com.jcarlos67.biblioneteca.model.collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

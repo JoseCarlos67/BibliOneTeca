@@ -1,21 +1,15 @@
 package com.jcarlos67.biblioneteca.config;
 
-import com.jcarlos67.biblioneteca.model.Author;
-import com.jcarlos67.biblioneteca.model.Book;
-import com.jcarlos67.biblioneteca.model.Edition;
-import com.jcarlos67.biblioneteca.model.Genre;
-import com.jcarlos67.biblioneteca.model.Publisher;
-import com.jcarlos67.biblioneteca.repository.AuthorRepository;
-import com.jcarlos67.biblioneteca.repository.BookRepository;
-import com.jcarlos67.biblioneteca.repository.EditionRepository;
-import com.jcarlos67.biblioneteca.repository.GenreRepository;
-import com.jcarlos67.biblioneteca.repository.PublisherRepository;
+import com.jcarlos67.biblioneteca.model.collection.*;
+import com.jcarlos67.biblioneteca.model.collection.enums.PhysicalCopyStatus;
+import com.jcarlos67.biblioneteca.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Set;
 
 @Configuration
 public class DevConfig implements CommandLineRunner {
@@ -35,6 +29,9 @@ public class DevConfig implements CommandLineRunner {
   @Autowired
   private GenreRepository genreRepository;
 
+  @Autowired
+  private PhysicalCopyRepository physicalCopyRepository;
+
   @Override
   public void run(String... args) throws Exception {
     editionRepository.deleteAll();
@@ -42,6 +39,7 @@ public class DevConfig implements CommandLineRunner {
     authorRepository.deleteAll();
     publisherRepository.deleteAll();
     genreRepository.deleteAll();
+    physicalCopyRepository.deleteAll();
 
     if (bookRepository.count() == 0) {
       // 1. Autor
@@ -104,6 +102,13 @@ public class DevConfig implements CommandLineRunner {
 
       // Salvando todas as edições em lote
       editionRepository.saveAll(Arrays.asList(ed1, ed2, ed3, ed4));
+
+      PhysicalCopy pc1 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
+      PhysicalCopy pc2 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
+      PhysicalCopy pc3 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
+      physicalCopyRepository.saveAll(Arrays.asList(pc1, pc2, pc3));
+
+
 
       System.out.println("Banco de dados populado com sucesso! 1 livro com 4 edições e 3 gêneros vinculados.");
     } else {

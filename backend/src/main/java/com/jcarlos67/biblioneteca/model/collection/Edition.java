@@ -1,4 +1,4 @@
-package com.jcarlos67.biblioneteca.model;
+package com.jcarlos67.biblioneteca.model.collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -9,11 +9,13 @@ import lombok.Setter;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table (name = "editions")
+@Table(name = "editions")
 @Getter
 @Setter
 public class Edition implements Serializable {
@@ -55,6 +57,10 @@ public class Edition implements Serializable {
   @ManyToOne
   @JoinColumn(name = "fk_publisher")
   private Publisher publisher;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "edition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private Set<PhysicalCopy> physicalCopies = new HashSet<>();
 
   public Edition(){
   }
