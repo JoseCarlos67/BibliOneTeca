@@ -3,9 +3,15 @@
 ![Status](https://img.shields.io/badge/Status-Em_Desenvolvimento-blue?style=for-the-badge)
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring](https://img.shields.io/badge/Spring_Boot-4.1-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
 ![Oracle](https://img.shields.io/badge/Oracle_Database-F80000?style=for-the-badge&logo=oracle&logoColor=white)
+![JPA](https://img.shields.io/badge/Hibernate/JPA-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
+![Flyway](https://img.shields.io/badge/Flyway-CC0200?style=for-the-badge&logo=flyway&logoColor=white)
+![Lombok](https://img.shields.io/badge/Lombok-BC0216?style=for-the-badge&logo=lombok&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-> API para gerenciamento do acersovo físico, controle de leitores (carteirinha virtual) e ciclo de empréstimos.
+
+> API para gerenciamento do acervo físico, controle de leitores (carteirinha virtual) e ciclo de empréstimos.
 > 
 ---
 ## ⚖️ REGRAS DE NEGÓCIO
@@ -53,10 +59,10 @@
 
 ---
 ## UML
-![Diagrama UML do Projeto](./docs/UML.png)
+![Diagrama UML do Projeto](../docs/UML.png)
 
 ## DER
-![Diagrama de Banco de Dados](./docs/DB.png)
+![Diagrama de Banco de Dados](../docs/DB.png)
 
 ---
-Em desenvolvimento por José Carlos - [LinkedIn](linkedin.com/in/josecarlosesteves/)
+Em desenvolvimento por José Carlos - [LinkedIn](https://linkedin.com/in/josecarlosesteves/)
