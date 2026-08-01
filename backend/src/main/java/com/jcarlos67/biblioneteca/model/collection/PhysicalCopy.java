@@ -38,29 +38,30 @@ public class PhysicalCopy implements Serializable {
   }
 
   public PhysicalCopy(Edition edition, PhysicalCopyStatus status) {
-    id = UUID.randomUUID();
     this.edition = edition;
-    GenerateAssetCode(edition);
     this.status = status;
   }
 
-  private void GenerateAssetCode(Edition edition) {
-    Genre[] genres = edition.getBook().getGenreSet().stream()
-            .limit(2)
-            .toArray(Genre[]::new);
+  @PrePersist
+  private void generateAssetCode() {
+    if (this.assetCode == null && this.edition != null && this.id != null) {
+      Genre[] genres = edition.getBook().getGenreSet().stream()
+              .limit(2)
+              .toArray(Genre[]::new);
 
-    StringBuilder prefix = new StringBuilder();
-    for (int i = 0; i < genres.length; i++) {
-      if (genres[i] != null) {
-        prefix.append(genres[i].getName().substring(0, 2).toUpperCase());
+      StringBuilder prefix = new StringBuilder();
+      for (int i = 0; i < genres.length; i++) {
+        if (genres[i] != null) {
+          prefix.append(genres[i].getName().substring(0, 2).toUpperCase());
+        }
       }
+
+      String sufix = String.valueOf(this.id);
+      int indice = sufix.indexOf('-');
+      sufix = sufix.substring(0, indice);
+
+      assetCode = prefix.toString() + sufix;
     }
-
-    String sufix = String.valueOf(this.id);
-    int indice = sufix.indexOf('-');
-    sufix = sufix.substring(0, indice);
-
-    assetCode = prefix.toString() + sufix;
   }
 
   @Override
