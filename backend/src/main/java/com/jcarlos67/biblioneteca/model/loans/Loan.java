@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.type.SqlTypes;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -29,8 +32,17 @@ public class Loan implements Serializable {
   private LocalDate dueDate;
   private LocalDate dateReturn;
   private Integer renewal;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "FK_LIBRARIAN", nullable = false)
   private Librarian librarian;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "FK_CLIENT", nullable = false)
   private Client client;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "FK_PHYSICAL_COPY", nullable = false)
   private PhysicalCopy book;
 
   public Loan() {

@@ -7,6 +7,6 @@ public record BookRequestDTO(
         UUID id,
         String title,
         Set<UUID> genreIds,
-        Set<UUID> authors
+        Set<AuthorRequestDTO> authors
 ) {
 }

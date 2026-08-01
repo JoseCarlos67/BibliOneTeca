@@ -57,6 +57,11 @@ public class Book implements Serializable {
     this.title = title;
   }
 
+  public void addAuthor(Author author) {
+    this.authorSet.add(author);
+    author.getBookSet().add(this);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
