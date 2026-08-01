@@ -32,7 +32,7 @@ public class Publisher implements Serializable {
   private String siteUrl;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
   private Set<Edition> editions = new HashSet<>();
 
   public Publisher() {
