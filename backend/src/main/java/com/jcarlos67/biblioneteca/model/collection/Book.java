@@ -28,7 +28,7 @@ public class Book implements Serializable {
 
   private String title;
 
-  @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
   private Set<Edition> editions = new HashSet<>();
 
   @JsonIgnore
