@@ -43,12 +43,13 @@ public class DevConfig implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
+    // Delete in reverse order of foreign keys to avoid constraint violations
+    physicalCopyRepository.deleteAll();
     editionRepository.deleteAll();
     bookRepository.deleteAll();
     authorRepository.deleteAll();
     publisherRepository.deleteAll();
     genreRepository.deleteAll();
-    physicalCopyRepository.deleteAll();
     clientRepository.deleteAll();
     librarianRepository.deleteAll();
 
@@ -115,14 +116,13 @@ public class DevConfig implements CommandLineRunner {
       editionRepository.saveAll(Arrays.asList(ed1, ed2, ed3, ed4));
 
       PhysicalCopy pc1 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
-      PhysicalCopy pc2 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
-      PhysicalCopy pc3 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
-      physicalCopyRepository.saveAll(Arrays.asList(pc1, pc2, pc3));
+      PhysicalCopy pc2 = new PhysicalCopy(ed2, PhysicalCopyStatus.AVAILABLE);
+      physicalCopyRepository.saveAll(Arrays.asList(pc1, pc2));
 
       Client client = new Client("00011122233", "José Esteves", LocalDate.of(2002, 02, 10), "jose@gmail.com", "35997665432", LocalDate.of(2026, 8, 20));
       clientRepository.save(client);
 
-      Librarian librarian = new Librarian("00011122233", "José Silva", LocalDate.of(2002, 02, 10), "jose@gmail.com", "teste");
+      Librarian librarian = new Librarian("00019122233", "José Silva", LocalDate.of(2002, 02, 10), "jose@gmail.com", "teste");
       librarianRepository.save(librarian);
 
 
