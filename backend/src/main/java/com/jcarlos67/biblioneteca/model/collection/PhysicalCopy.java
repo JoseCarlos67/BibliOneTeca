@@ -23,15 +23,18 @@ public class PhysicalCopy implements Serializable {
   @GeneratedValue(strategy = GenerationType.UUID)
   @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
   @Setter(AccessLevel.NONE)
+  @Column(nullable = false)
   private UUID id;
 
   @ManyToOne
   @JoinColumn(name = "fk_edition")
   private Edition edition;
 
+  @Column(nullable = false, unique = true)
   private String assetCode;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private PhysicalCopyStatus status;
 
   public PhysicalCopy(){

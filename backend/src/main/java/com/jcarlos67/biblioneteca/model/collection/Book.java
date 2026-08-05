@@ -24,8 +24,10 @@ public class Book implements Serializable {
   @GeneratedValue(strategy = GenerationType.UUID)
   @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
   @Setter(AccessLevel.NONE)
+  @Column(nullable = false)
   private UUID id;
 
+  @Column(nullable = false)
   private String title;
 
   @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)

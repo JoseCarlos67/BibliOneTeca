@@ -26,11 +26,15 @@ public class Author implements Serializable {
   @GeneratedValue(strategy = GenerationType.UUID)
   @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
   @Setter(AccessLevel.NONE)
+  @Column(nullable = false)
   private UUID id;
 
 
+  @Column(nullable = false)
   private String name;
+  @Column(nullable = false)
   private LocalDate dateOfBirth;
+
   private LocalDate dateOfDeath;
 
   @NotNull(message = "The nationality cannot be null!")
