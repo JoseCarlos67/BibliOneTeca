@@ -1,4 +1,4 @@
-package com.jcarlos67.biblioneteca.dto;
+package com.jcarlos67.biblioneteca.dto.request;
 
 import java.time.LocalDate;
 import java.util.UUID;
