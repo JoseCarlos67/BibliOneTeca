@@ -1,7 +1,7 @@
 package com.jcarlos67.biblioneteca.controller;
 
-import com.jcarlos67.biblioneteca.dto.PhysicalCopyCreateDTO;
-import com.jcarlos67.biblioneteca.dto.PhysicalCopyResponseDTO;
+import com.jcarlos67.biblioneteca.dto.create.PhysicalCopyCreateDTO;
+import com.jcarlos67.biblioneteca.dto.response.PhysicalCopyResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.PhysicalCopy;
 import com.jcarlos67.biblioneteca.service.PhysicalCopyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ public class PysicalCopyController {
 
   @Autowired
   private PhysicalCopyService service;
-
 
   @PostMapping
   public ResponseEntity<PhysicalCopyResponseDTO> createPhysicalCopy(@RequestBody PhysicalCopyCreateDTO dto) {

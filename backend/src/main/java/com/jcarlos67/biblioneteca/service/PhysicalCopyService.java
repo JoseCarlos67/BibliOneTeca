@@ -1,9 +1,9 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.dto.BookRequestDTO;
-import com.jcarlos67.biblioneteca.dto.EditionRequestDTO;
-import com.jcarlos67.biblioneteca.dto.PhysicalCopyCreateDTO;
-import com.jcarlos67.biblioneteca.dto.PublisherRequestDTO;
+import com.jcarlos67.biblioneteca.dto.request.BookRequestDTO;
+import com.jcarlos67.biblioneteca.dto.request.EditionRequestDTO;
+import com.jcarlos67.biblioneteca.dto.create.PhysicalCopyCreateDTO;
+import com.jcarlos67.biblioneteca.dto.request.PublisherRequestDTO;
 import com.jcarlos67.biblioneteca.model.collection.*;
 import com.jcarlos67.biblioneteca.model.collection.enums.PhysicalCopyStatus;
 import com.jcarlos67.biblioneteca.repository.*;
