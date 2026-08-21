@@ -26,7 +26,7 @@ public class PhysicalCopy implements Serializable {
   @Column(nullable = false)
   private UUID id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "fk_edition")
   private Edition edition;
 

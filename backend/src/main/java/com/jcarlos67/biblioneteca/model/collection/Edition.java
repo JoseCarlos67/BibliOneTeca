@@ -60,7 +60,7 @@ public class Edition implements Serializable {
   private Publisher publisher;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "edition", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "edition", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<PhysicalCopy> physicalCopies = new HashSet<>();
 
   public Edition(){

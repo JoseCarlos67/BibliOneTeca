@@ -4,6 +4,7 @@ import com.jcarlos67.biblioneteca.model.collection.Edition;
 import com.jcarlos67.biblioneteca.repository.EditionRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,16 +28,17 @@ public class EditionService {
     return edition.get();
   }
 
+  public Optional findById(UUID id) {
+    return repository.findById(id);
+  }
+
   public Edition insert(Edition edition) {
     return repository.save(edition);
   }
 
-  public void delete(UUID id) {
-    try {
-      repository.deleteById(id);
-    } catch (EmptyResultDataAccessException e) {
-      e.printStackTrace();
-    }
+  @Transactional
+  public void delete(Edition edition) {
+    repository.delete(edition);
   }
 
 }
