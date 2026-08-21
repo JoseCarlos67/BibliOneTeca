@@ -2,7 +2,6 @@ package com.jcarlos67.biblioneteca.service;
 
 import com.jcarlos67.biblioneteca.model.loans.Librarian;
 import com.jcarlos67.biblioneteca.repository.LibrarianRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,12 @@ import java.util.UUID;
 
 @Service
 public class LibrarianService {
-  @Autowired
-  private LibrarianRepository repository;
+
+  final private LibrarianRepository repository;
+
+  public LibrarianService(LibrarianRepository repository) {
+    this.repository = repository;
+  }
 
   public List<Librarian> findAll() {
     return  repository.findAll();
@@ -35,4 +38,5 @@ public class LibrarianService {
       e.printStackTrace();
     }
   }
+
 }

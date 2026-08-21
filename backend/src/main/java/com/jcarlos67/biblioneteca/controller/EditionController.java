@@ -15,8 +15,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/editions")
 public class EditionController {
+
   @Autowired
-  EditionService service;
+  private EditionService service;
 
   @GetMapping
   public ResponseEntity<List<EditionDTO>> findAll() {
@@ -24,4 +25,5 @@ public class EditionController {
     List<EditionDTO> editionDTOS = editionList.stream().map(x -> new EditionDTO(x)).collect(Collectors.toList());
     return ResponseEntity.ok().body(editionDTOS);
   }
+
 }

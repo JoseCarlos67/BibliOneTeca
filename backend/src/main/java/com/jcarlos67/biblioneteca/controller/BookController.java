@@ -13,12 +13,14 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/books")
 public class BookController {
+
   @Autowired
-  BookService service;
+  private BookService service;
 
   @GetMapping
   public ResponseEntity<List<Book>> findAll() {
     List<Book> bookList = service.findAll();
     return ResponseEntity.ok().body(bookList);
   }
+
 }

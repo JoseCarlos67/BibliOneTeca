@@ -1,14 +1,13 @@
 package com.jcarlos67.biblioneteca.service;
 
+import com.jcarlos67.biblioneteca.dto.create.PhysicalCopyCreateDTO;
 import com.jcarlos67.biblioneteca.dto.request.BookRequestDTO;
 import com.jcarlos67.biblioneteca.dto.request.EditionRequestDTO;
-import com.jcarlos67.biblioneteca.dto.create.PhysicalCopyCreateDTO;
 import com.jcarlos67.biblioneteca.dto.request.PublisherRequestDTO;
 import com.jcarlos67.biblioneteca.model.collection.*;
 import com.jcarlos67.biblioneteca.model.collection.enums.PhysicalCopyStatus;
 import com.jcarlos67.biblioneteca.repository.*;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -24,11 +23,11 @@ public class PhysicalCopyService {
   private final PublisherRepository publisherRepository;
 
   public PhysicalCopyService(
-          @Autowired PhysicalCopyRepository physicalCopyRepository,
-          @Autowired EditionRepository editionRepository,
-          @Autowired BookRepository bookRepository,
-          @Autowired AuthorRepository authorRepository,
-          @Autowired PublisherRepository publisherRepository
+          EditionRepository editionRepository,
+          PhysicalCopyRepository physicalCopyRepository,
+          BookRepository bookRepository,
+          AuthorRepository authorRepository,
+          PublisherRepository publisherRepository
   ) {
     this.physicalCopyRepository = physicalCopyRepository;
     this.editionRepository = editionRepository;
@@ -96,7 +95,6 @@ public class PhysicalCopyService {
      return publisherRepository.save(newPublisher);
    }
 
-
    private Edition resolveEdition(EditionRequestDTO dto, Book book, Publisher publisher) {
      if (dto.id() != null) {
        return editionRepository.findById(dto.id()).orElseThrow();
@@ -113,4 +111,5 @@ public class PhysicalCopyService {
      newEdition.setSynopsis(dto.synopsis());
      return editionRepository.save(newEdition);
    }
+
 }

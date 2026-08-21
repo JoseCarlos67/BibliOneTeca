@@ -13,12 +13,14 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "librarians")
 public class LibrarianController {
+
   @Autowired
-  LibrarianService service;
+  private LibrarianService service;
 
   @GetMapping
   public ResponseEntity<List<Librarian>> findAll() {
     List<Librarian> LibrarianList = service.findAll();
     return ResponseEntity.ok().body(LibrarianList);
   }
+
 }

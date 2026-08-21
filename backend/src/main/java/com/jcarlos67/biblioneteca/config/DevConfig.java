@@ -36,10 +36,10 @@ public class DevConfig implements CommandLineRunner {
   private PhysicalCopyRepository physicalCopyRepository;
 
   @Autowired
-  ClientRepository clientRepository;
+  private ClientRepository clientRepository;
 
   @Autowired
-  LibrarianRepository librarianRepository;
+  private LibrarianRepository librarianRepository;
 
   @Override
   public void run(String... args) throws Exception {
