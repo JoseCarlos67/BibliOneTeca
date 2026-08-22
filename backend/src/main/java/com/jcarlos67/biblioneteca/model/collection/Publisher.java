@@ -24,15 +24,20 @@ public class Publisher implements Serializable {
   @GeneratedValue(strategy = GenerationType.UUID)
   @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
   @Setter(AccessLevel.NONE)
+  @Column(nullable = false)
   private UUID id;
 
+  @Column(nullable = false)
   private String legalName;
+  @Column(nullable = false)
   private String tradeName;
+  @Column(nullable = false, unique = true)
   private String cnpj;
+  @Column(nullable = false)
   private String siteUrl;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
   private Set<Edition> editions = new HashSet<>();
 
   public Publisher() {

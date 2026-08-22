@@ -15,11 +15,12 @@ import java.util.List;
 public class PublisherController {
 
   @Autowired
-  PublisherService service;
+  private PublisherService service;
 
   @GetMapping
   public ResponseEntity<List<Publisher>> findAll() {
     List<Publisher> publishersList = service.findAll();
     return ResponseEntity.ok().body(publishersList);
   }
+
 }

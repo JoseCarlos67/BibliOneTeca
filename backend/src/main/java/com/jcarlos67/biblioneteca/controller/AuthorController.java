@@ -13,12 +13,14 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/authors")
 public class AuthorController {
+
   @Autowired
-  AuthorService service;
+  private AuthorService service;
 
   @GetMapping
   public ResponseEntity<List<Author>> findAll() {
     List<Author> authorList = service.findAll();
     return ResponseEntity.ok().body(authorList);
   }
+
 }

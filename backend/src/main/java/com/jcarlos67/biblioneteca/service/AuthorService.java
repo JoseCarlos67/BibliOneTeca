@@ -2,7 +2,6 @@ package com.jcarlos67.biblioneteca.service;
 
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.repository.AuthorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,12 @@ import java.util.UUID;
 
 @Service
 public class AuthorService {
-  @Autowired
-  private AuthorRepository repository;
+
+  final private AuthorRepository repository;
+
+  public AuthorService(AuthorRepository repository) {
+    this.repository = repository;
+  }
 
   public List<Author> findAll() {
     return repository.findAll();
@@ -32,7 +35,4 @@ public class AuthorService {
     }
   }
 
-  public void deleteAll() {
-    repository.deleteAll();
-  }
 }

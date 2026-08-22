@@ -5,18 +5,19 @@ import com.jcarlos67.biblioneteca.model.collection.Edition;
 import com.jcarlos67.biblioneteca.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/editions")
 public class EditionController {
+
   @Autowired
-  EditionService service;
+  private EditionService service;
 
   @GetMapping
   public ResponseEntity<List<EditionDTO>> findAll() {
@@ -24,4 +25,17 @@ public class EditionController {
     List<EditionDTO> editionDTOS = editionList.stream().map(x -> new EditionDTO(x)).collect(Collectors.toList());
     return ResponseEntity.ok().body(editionDTOS);
   }
+
+  @DeleteMapping("{id}")
+  public ResponseEntity<Void> delete(@PathVariable(name = "id") String idString) {
+    UUID id = UUID.fromString(idString);
+    Optional<Edition> optionalEdition = service.findById(id);
+
+    if (optionalEdition.isPresent()) {
+      service.delete(optionalEdition.get());
+    }
+
+    return ResponseEntity.notFound().build();
+  }
+
 }

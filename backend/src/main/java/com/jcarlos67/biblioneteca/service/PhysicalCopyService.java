@@ -1,0 +1,115 @@
+package com.jcarlos67.biblioneteca.service;
+
+import com.jcarlos67.biblioneteca.dto.create.PhysicalCopyCreateDTO;
+import com.jcarlos67.biblioneteca.dto.request.BookRequestDTO;
+import com.jcarlos67.biblioneteca.dto.request.EditionRequestDTO;
+import com.jcarlos67.biblioneteca.dto.request.PublisherRequestDTO;
+import com.jcarlos67.biblioneteca.model.collection.*;
+import com.jcarlos67.biblioneteca.model.collection.enums.PhysicalCopyStatus;
+import com.jcarlos67.biblioneteca.repository.*;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+public class PhysicalCopyService {
+
+  private final PhysicalCopyRepository physicalCopyRepository;
+  private final EditionRepository editionRepository;
+  private final BookRepository bookRepository;
+  private final AuthorRepository authorRepository;
+  private final PublisherRepository publisherRepository;
+
+  public PhysicalCopyService(
+          EditionRepository editionRepository,
+          PhysicalCopyRepository physicalCopyRepository,
+          BookRepository bookRepository,
+          AuthorRepository authorRepository,
+          PublisherRepository publisherRepository
+  ) {
+    this.physicalCopyRepository = physicalCopyRepository;
+    this.editionRepository = editionRepository;
+    this.bookRepository = bookRepository;
+    this.authorRepository = authorRepository;
+    this.publisherRepository = publisherRepository;
+  }
+
+  @Transactional
+  public PhysicalCopy create(PhysicalCopyCreateDTO dto) {
+    EditionRequestDTO  editionDto = dto.edition();
+    Book book = resolveBook(editionDto.book());
+    Publisher publisher = resolverPublisher(editionDto.publisher());
+    Edition edition = resolveEdition(editionDto, book, publisher);
+
+    PhysicalCopy copy = new PhysicalCopy();
+    copy.setEdition(edition);
+    copy.setStatus(PhysicalCopyStatus.AVAILABLE);
+
+    return physicalCopyRepository.save(copy);
+  }
+
+  private Book resolveBook(BookRequestDTO dto) {
+    if (dto.id() != null) {
+      return bookRepository.findById(dto.id()).orElseThrow();
+    }
+
+    Book newBook = new Book();
+    newBook.setTitle(dto.title());
+
+    Set<Author> authors = dto.authors().stream()
+            .map(authorDto -> {
+              if (authorDto.id() != null) {
+                return authorRepository.findById(authorDto.id()).orElseThrow();
+              }
+              Author newAuthor = new Author();
+              newAuthor.setName(authorDto.name());
+              newAuthor.setDateOfBirth(authorDto.dateOfBirth());
+              newAuthor.setDateOfDeath(authorDto.dateOfDeath());
+              newAuthor.setNationality(authorDto.nationality());
+              return authorRepository.save(newAuthor);
+            }).collect(Collectors.toSet());
+
+    authors.forEach(newBook::addAuthor);
+
+    return bookRepository.save(newBook);
+  }
+
+   private Publisher resolverPublisher(PublisherRequestDTO dto) {
+     if (dto.id() != null){
+       return publisherRepository.findById(dto.id()).orElseThrow();
+     }
+     // Check if publisher with same CNPJ already exists
+     if (dto.cnpj() != null) {
+       var existingPublisher = publisherRepository.findByCnpj(dto.cnpj());
+       if (existingPublisher.isPresent()) {
+         return existingPublisher.get();
+       }
+     }
+     Publisher newPublisher = new Publisher();
+     newPublisher.setLegalName(dto.legalName());
+     newPublisher.setTradeName(dto.tradeName());
+     newPublisher.setCnpj(dto.cnpj());
+     newPublisher.setSiteUrl(dto.siteUrl());
+     return publisherRepository.save(newPublisher);
+   }
+
+   private Edition resolveEdition(EditionRequestDTO dto, Book book, Publisher publisher) {
+     if (dto.id() != null) {
+       return editionRepository.findById(dto.id()).orElseThrow();
+     }
+     Edition newEdition = new Edition();
+     newEdition.setIsbn(dto.isbn());
+     newEdition.setEditionNumber(dto.editionNumber());
+     newEdition.setBook(book);
+     newEdition.setPublisher(publisher);
+     newEdition.setLanguage(dto.language());
+     newEdition.setYear_publication(dto.publicationYear() != null ? dto.publicationYear() : 0);
+     newEdition.setPage_number(dto.pageNumber() != null ? dto.pageNumber() : 0);
+     newEdition.setCover(dto.urlCover());
+     newEdition.setSynopsis(dto.synopsis());
+     return editionRepository.save(newEdition);
+   }
+
+}

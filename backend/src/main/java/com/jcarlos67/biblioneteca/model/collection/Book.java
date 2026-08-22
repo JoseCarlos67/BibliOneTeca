@@ -24,11 +24,13 @@ public class Book implements Serializable {
   @GeneratedValue(strategy = GenerationType.UUID)
   @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
   @Setter(AccessLevel.NONE)
+  @Column(nullable = false)
   private UUID id;
 
+  @Column(nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
   private Set<Edition> editions = new HashSet<>();
 
   @JsonIgnore
@@ -55,6 +57,11 @@ public class Book implements Serializable {
   public Book(String title) {
     this.id = null;
     this.title = title;
+  }
+
+  public void addAuthor(Author author) {
+    this.authorSet.add(author);
+    author.getBookSet().add(this);
   }
 
   @Override

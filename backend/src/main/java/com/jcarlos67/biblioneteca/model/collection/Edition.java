@@ -25,13 +25,14 @@ public class Edition implements Serializable {
   @GeneratedValue(strategy = GenerationType.UUID)
   @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
   @Setter(AccessLevel.NONE)
+  @Column(nullable = false)
   private UUID id;
 
   @NotNull
   @Column(nullable = false, unique = true)
   private String isbn;
 
-  private Integer edition_number;
+  private Integer editionNumber;
 
   @Column(nullable = false)
   private int year_publication;
@@ -59,16 +60,16 @@ public class Edition implements Serializable {
   private Publisher publisher;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "edition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "edition", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<PhysicalCopy> physicalCopies = new HashSet<>();
 
   public Edition(){
   }
 
-  public Edition(String isbn, Integer edition_number, int year_publication, String language, int page_number, String cover, String synopsis, Book book, Publisher publisher) {
+  public Edition(String isbn, Integer editionNumber, int year_publication, String language, int page_number, String cover, String synopsis, Book book, Publisher publisher) {
     this.id = null;
     this.isbn = isbn;
-    this.edition_number = edition_number;
+    this.editionNumber = editionNumber;
     this.year_publication = year_publication;
     this.language = language;
     this.page_number = page_number;

@@ -23,8 +23,10 @@ public class Genre implements Serializable {
   @GeneratedValue(strategy = GenerationType.UUID)
   @org.hibernate.annotations.JdbcTypeCode(SqlTypes.VARCHAR)
   @Setter(AccessLevel.NONE)
+  @Column(nullable = false)
   private UUID id;
 
+  @Column(nullable = false)
   private String name;
 
   @JsonIgnore

@@ -36,7 +36,7 @@ public class EditionDTO implements Serializable {
     this.author = edition.getBook().getAuthorSet();
     this.publisher = edition.getPublisher();
     this.isbn = edition.getIsbn();
-    this.edition_number = edition.getEdition_number();
+    this.edition_number = edition.getEditionNumber();
     this.year_publication = edition.getYear_publication();
     this.language = edition.getLanguage();
     this.genre = edition.getBook().getGenreSet();
