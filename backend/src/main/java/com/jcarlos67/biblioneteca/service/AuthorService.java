@@ -22,9 +22,9 @@ public class AuthorService {
     return repository.findAll();
   }
 
-  public Author findById(UUID id) {
+  public Optional<Author> findById(UUID id) {
     Optional<Author> author = repository.findById(id);
-    return author.get();
+    return author;
   }
 
   public void delete(UUID id) {
