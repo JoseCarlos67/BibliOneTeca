@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,13 +28,8 @@ public class EditionController {
   @DeleteMapping("{id}")
   public ResponseEntity<Void> delete(@PathVariable(name = "id") String idString) {
     UUID id = UUID.fromString(idString);
-    Optional<Edition> optionalEdition = service.findById(id);
-
-    if (optionalEdition.isPresent()) {
-      service.delete(optionalEdition.get());
-    }
-
-    return ResponseEntity.notFound().build();
+    service.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 
 }
