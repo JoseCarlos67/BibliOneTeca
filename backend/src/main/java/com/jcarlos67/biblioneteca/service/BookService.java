@@ -22,9 +22,9 @@ public class BookService {
     return repository.findAll();
   }
 
-  public Book findById(UUID id) {
+  public Optional<Book> findById(UUID id) {
     Optional<Book> book = repository.findById(id);
-    return book.get();
+    return book;
   }
 
   public Book insert(Book book) {
