@@ -1,16 +1,15 @@
 package com.jcarlos67.biblioneteca.controller;
 
+import com.jcarlos67.biblioneteca.dto.create.BookCreateDTO;
 import com.jcarlos67.biblioneteca.dto.response.BookResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.Book;
 import com.jcarlos67.biblioneteca.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +48,20 @@ public class BookController {
             ))
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
+  @Operation(summary = "Register a new book", description = "Creates a book with its authors and genres. Existing authors are linked by id, new authors are created inline.")
+  @PostMapping
+  public ResponseEntity<BookResponseDTO> createBook(@RequestBody BookCreateDTO dto) {
+    Book savedBook = service.create(dto);
+
+    BookResponseDTO responseDTO = new BookResponseDTO(
+            savedBook.getTitle(),
+            savedBook.getGenreSet().stream().toList(),
+            savedBook.getAuthorSet().stream().toList()
+    );
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
   }
 
 }
