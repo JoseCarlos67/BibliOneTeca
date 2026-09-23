@@ -4,6 +4,7 @@ import com.jcarlos67.biblioneteca.dto.create.AuthorCreateDTO;
 import com.jcarlos67.biblioneteca.dto.response.AuthorResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.repository.AuthorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,9 @@ public class AuthorService {
   }
 
   public void delete(UUID id) {
+    if (!repository.existsById(id))
+      throw new EntityNotFoundException("Author not found!");
+
     try {
       repository.deleteById(id);
     } catch (EmptyResultDataAccessException e) {

@@ -1,5 +1,8 @@
 package com.jcarlos67.biblioneteca.exception;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.apache.coyote.Response;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -24,6 +27,21 @@ public class GlobalExceptionHandler {
     });
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<Map<String, String>> handleEntityNotFound(EntityNotFoundException e) {
+    Map<String, String> error = new HashMap<>();
+    error.put("error", e.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(DataIntegrityViolationException e) {
+    Map<String, String> error = new HashMap<>();
+    error.put("error", "It is not possible to delete an author who is linked to registered works");
+
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
 
 }
