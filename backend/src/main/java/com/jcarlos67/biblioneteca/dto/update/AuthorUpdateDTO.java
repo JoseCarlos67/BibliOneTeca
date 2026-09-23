@@ -6,7 +6,7 @@ import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
-public record AthorUpdateDTO(
+public record AuthorUpdateDTO(
         @NotBlank(message = "The author's name is required")
         String name,
 

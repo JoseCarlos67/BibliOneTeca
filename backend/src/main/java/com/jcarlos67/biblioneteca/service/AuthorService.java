@@ -2,6 +2,7 @@ package com.jcarlos67.biblioneteca.service;
 
 import com.jcarlos67.biblioneteca.dto.create.AuthorCreateDTO;
 import com.jcarlos67.biblioneteca.dto.response.AuthorResponseDTO;
+import com.jcarlos67.biblioneteca.dto.update.AuthorUpdateDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.repository.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -48,6 +49,24 @@ public class AuthorService {
     } catch (EmptyResultDataAccessException e) {
       e.printStackTrace();
     }
+  }
+
+  public AuthorResponseDTO updateAuthor(UUID id, AuthorUpdateDTO updateDTO) {
+    Author author = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
+
+    author.setName(updateDTO.name());
+    author.setDateOfBirth(updateDTO.dateOfBirth());
+    author.setDateOfDeath(updateDTO.dateOfDeath());
+    author.setNationality(updateDTO.nationality());
+
+    author = repository.save(author);
+
+    return new AuthorResponseDTO(
+            author.getName(),
+            author.getDateOfBirth(),
+            author.getDateOfDeath(),
+            author.getNationality()
+    );
   }
 
   private void resolveAuthor(AuthorCreateDTO authorDTO, Author authorEntity) {

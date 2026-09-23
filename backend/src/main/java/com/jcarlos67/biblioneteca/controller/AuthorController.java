@@ -2,6 +2,7 @@ package com.jcarlos67.biblioneteca.controller;
 
 import com.jcarlos67.biblioneteca.dto.create.AuthorCreateDTO;
 import com.jcarlos67.biblioneteca.dto.response.AuthorResponseDTO;
+import com.jcarlos67.biblioneteca.dto.update.AuthorUpdateDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,6 +56,12 @@ public class AuthorController {
   public ResponseEntity<Void> deleteAuthor(@PathVariable UUID id) {
     service.delete(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<AuthorResponseDTO> updateAuthor(@PathVariable UUID id, @Valid @RequestBody AuthorUpdateDTO updateDTO) {
+    AuthorResponseDTO updatedAuthor = service.updateAuthor(id, updateDTO);
+    return ResponseEntity.ok(updatedAuthor);
   }
 
 }
