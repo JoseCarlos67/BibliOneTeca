@@ -1,10 +1,8 @@
 package com.jcarlos67.biblioneteca.service;
 
 import com.jcarlos67.biblioneteca.dto.create.BookCreateDTO;
-import com.jcarlos67.biblioneteca.dto.request.BookRequestDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.model.collection.Book;
-import com.jcarlos67.biblioneteca.model.collection.Genre;
 import com.jcarlos67.biblioneteca.repository.AuthorRepository;
 import com.jcarlos67.biblioneteca.repository.BookRepository;
 import com.jcarlos67.biblioneteca.repository.GenreRepository;
@@ -57,7 +55,7 @@ public class BookService {
 
   public Book create(BookCreateDTO dto) {
     Book newBook = new Book();
-    newBook.setTitle(dto.book().title());
+    newBook.setTitle(dto.title());
 
     resolveAuthors(dto, newBook);
     resolveGenres(dto, newBook);
@@ -65,7 +63,7 @@ public class BookService {
   }
 
   private void resolveAuthors(BookCreateDTO dto, Book book) {
-    Set<Author> authors = dto.book().authors().stream()
+    Set<Author> authors = dto.authors().stream()
             .map(authorDto -> {
               if (authorDto.id() != null) {
                 return authorRepository.findById(authorDto.id())
@@ -85,11 +83,11 @@ public class BookService {
   }
 
   private void resolveGenres(BookCreateDTO dto, Book book) {
-    if (dto.book().genreIds() == null) {
+    if (dto.genreIds() == null) {
       return;
     }
 
-    dto.book().genreIds().stream()
+    dto.genreIds().stream()
             .map(genreId -> genreRepository.findById(genreId)
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND,

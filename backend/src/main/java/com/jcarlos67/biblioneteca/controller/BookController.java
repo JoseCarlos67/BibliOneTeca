@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class BookController {
 
   @Operation(summary = "Register a new book", description = "Creates a book with its authors and genres. Existing authors are linked by id, new authors are created inline.")
   @PostMapping
-  public ResponseEntity<BookResponseDTO> createBook(@RequestBody BookCreateDTO dto) {
+  public ResponseEntity<BookResponseDTO> createBook(@Validated @RequestBody BookCreateDTO dto) {
     Book savedBook = service.create(dto);
 
     BookResponseDTO responseDTO = new BookResponseDTO(
