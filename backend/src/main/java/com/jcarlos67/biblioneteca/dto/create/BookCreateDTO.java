@@ -1,6 +1,5 @@
 package com.jcarlos67.biblioneteca.dto.create;
 
-import com.jcarlos67.biblioneteca.dto.request.AuthorRequestDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,6 +14,9 @@ public record BookCreateDTO(
         Set<UUID> genreIds,
 
         @NotNull(message = "The book's author is required")
-        Set<AuthorRequestDTO> authors
+        Set<UUID> authors,
+
+        @NotNull(message = "The book's genre is required")
+        EditionCreateDTO edition
 ) {
 }

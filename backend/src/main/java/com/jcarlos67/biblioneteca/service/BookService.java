@@ -1,11 +1,8 @@
 package com.jcarlos67.biblioneteca.service;
 
 import com.jcarlos67.biblioneteca.dto.create.BookCreateDTO;
-import com.jcarlos67.biblioneteca.model.collection.Author;
-import com.jcarlos67.biblioneteca.model.collection.Book;
-import com.jcarlos67.biblioneteca.repository.AuthorRepository;
-import com.jcarlos67.biblioneteca.repository.BookRepository;
-import com.jcarlos67.biblioneteca.repository.GenreRepository;
+import com.jcarlos67.biblioneteca.model.collection.*;
+import com.jcarlos67.biblioneteca.repository.*;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,11 +22,18 @@ public class BookService {
   final private AuthorRepository authorRepository;
 
   final private GenreRepository genreRepository;
+
+  final private EditionRepository editionRepository;
+
+  final private PublisherRepository publisherRepository;
+
   public BookService (BookRepository bookRepository, AuthorRepository authorRepository,
-                      GenreRepository genreRepository) {
+                      GenreRepository genreRepository, EditionRepository editionRepository, PublisherRepository publisherRepository) {
     this.bookRepository = bookRepository;
     this.authorRepository = authorRepository;
     this.genreRepository = genreRepository;
+    this.editionRepository = editionRepository;
+    this.publisherRepository = publisherRepository;
   }
 
   public List<Book> findAll() {
@@ -58,41 +62,65 @@ public class BookService {
     newBook.setTitle(dto.title());
 
     resolveAuthors(dto, newBook);
+
     resolveGenres(dto, newBook);
+
+    resolveEdition(dto, newBook);
+
     return bookRepository.save(newBook);
   }
 
   private void resolveAuthors(BookCreateDTO dto, Book book) {
-    Set<Author> authors = dto.authors().stream()
-            .map(authorDto -> {
-              if (authorDto.id() != null) {
-                return authorRepository.findById(authorDto.id())
-                        .orElseThrow(() -> new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Autor não encontrado: " + authorDto.id()));
-              }
-              Author newAuthor = new Author();
-              newAuthor.setName(authorDto.name());
-              newAuthor.setDateOfBirth(authorDto.dateOfBirth());
-              newAuthor.setDateOfDeath(authorDto.dateOfDeath());
-              newAuthor.setNationality(authorDto.nationality());
-              return authorRepository.save(newAuthor);
-            }).collect(Collectors.toSet());
+    Set<UUID> authorIds = dto.authors();
+
+    List<Author> authors = authorRepository.findAllById(dto.authors());
+
+    if (authors.size() != authorIds.size()) {
+      throw new ResponseStatusException(
+              HttpStatus.NOT_FOUND,
+              "One or more of the specified authors were not found in the system"
+      );
+    }
 
     authors.forEach(book::addAuthor);
   }
 
   private void resolveGenres(BookCreateDTO dto, Book book) {
-    if (dto.genreIds() == null) {
-      return;
+    Set<UUID> genreIds = dto.genreIds();
+
+    List<Genre> genres = genreRepository.findAllById(genreIds);
+
+    if (genres.size() != genreIds.size()) {
+      throw new ResponseStatusException(
+              HttpStatus.NOT_FOUND,
+              "One or more of the specified genres were not found in the system"
+      );
     }
 
-    dto.genreIds().stream()
-            .map(genreId -> genreRepository.findById(genreId)
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND,
-                            "Gênero não encontrado: " + genreId)))
-            .forEach(book.getGenreSet()::add);
+    genres.forEach(book::addGenre);
   }
 
+  private void resolveEdition(BookCreateDTO dto, Book book) {
+    Edition edition = new Edition();
+    edition.setIsbn(dto.edition().isbn());
+    edition.setEditionNumber(dto.edition().editionNumber());
+    edition.setYear_publication(dto.edition().yearPublication());
+    edition.setLanguage(dto.edition().language());
+    edition.setPage_number(dto.edition().pageNumber());
+    edition.setCover(dto.edition().urlCover());
+    edition.setSynopsis(dto.edition().synopsis());
+    edition.setBook(book);
+
+    Optional<Publisher> publisher = Optional.of(new Publisher());
+    publisher = publisherRepository.findById(dto.edition().publisherId());
+
+    if (publisher.isPresent()) {
+      edition.setPublisher(publisher.get());
+
+      editionRepository.save(edition);
+
+      edition.setBook(book);
+    }
+
+  }
 }
