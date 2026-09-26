@@ -44,14 +44,14 @@ public class DevConfig implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     // Delete in reverse order of foreign keys to avoid constraint violations
-    physicalCopyRepository.deleteAll();
-    editionRepository.deleteAll();
-    bookRepository.deleteAll();
-    authorRepository.deleteAll();
-    publisherRepository.deleteAll();
-    genreRepository.deleteAll();
-    clientRepository.deleteAll();
-    librarianRepository.deleteAll();
+//    physicalCopyRepository.deleteAll();
+//    editionRepository.deleteAll();
+//    bookRepository.deleteAll();
+//    authorRepository.deleteAll();
+//    publisherRepository.deleteAll();
+//    genreRepository.deleteAll();
+//    clientRepository.deleteAll();
+//    librarianRepository.deleteAll();
 
     if (bookRepository.count() == 0) {
       // 1. Autor

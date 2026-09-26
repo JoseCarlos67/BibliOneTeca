@@ -30,7 +30,7 @@ public class Book implements Serializable {
   @Column(nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Set<Edition> editions = new HashSet<>();
 
   @JsonIgnore
@@ -62,6 +62,16 @@ public class Book implements Serializable {
   public void addAuthor(Author author) {
     this.authorSet.add(author);
     author.getBookSet().add(this);
+  }
+
+  public void addGenre(Genre genre) {
+    this.genreSet.add(genre);
+    genre.getBookSet().add(this);
+  }
+
+  public void addEdition(Edition edition) {
+    this.editions.add(edition);
+    edition.setBook(this);
   }
 
   @Override

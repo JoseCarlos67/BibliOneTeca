@@ -20,6 +20,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Author implements Serializable {
+
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -66,4 +67,5 @@ public class Author implements Serializable {
   public int hashCode() {
     return Objects.hash(getId(), getName(), getDateOfBirth(), getDateOfDeath(), getNationality());
   }
+
 }
