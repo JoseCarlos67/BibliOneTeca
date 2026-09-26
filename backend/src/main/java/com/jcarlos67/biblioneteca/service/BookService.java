@@ -1,6 +1,7 @@
 package com.jcarlos67.biblioneteca.service;
 
 import com.jcarlos67.biblioneteca.dto.create.BookCreateDTO;
+import com.jcarlos67.biblioneteca.dto.response.BookResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.*;
 import com.jcarlos67.biblioneteca.repository.*;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -56,7 +57,7 @@ public class BookService {
     }
   }
 
-  public Book create(BookCreateDTO dto) {
+  public BookResponseDTO create(BookCreateDTO dto) {
     Book newBook = new Book();
     newBook.setTitle(dto.title());
 
@@ -64,15 +65,15 @@ public class BookService {
 
     resolveGenres(dto, newBook);
 
-    resolveEdition(dto, newBook);
-
-    return bookRepository.save(newBook);
+    Edition newEdition = resolveEdition(dto, newBook);
+    bookRepository.save(newBook);
+    return new BookResponseDTO(newBook.getTitle(), newBook.getGenreSet().stream().map(Genre::getName).toList(), newBook.getAuthorSet().stream().map(Author::getName).toList(), newEdition.getIsbn(), newEdition.getEditionNumber(), newEdition.getYear_publication(), newEdition.getLanguage(), newEdition.getPage_number(), newEdition.getCover(), newEdition.getSynopsis(), newEdition.getPublisher().getTradeName(), newEdition.getPhysicalCopies().size());
   }
 
   private void resolveAuthors(BookCreateDTO dto, Book book) {
-    Set<UUID> authorIds = dto.authors();
+    Set<UUID> authorIds = dto.authorId();
 
-    List<Author> authors = authorRepository.findAllById(dto.authors());
+    List<Author> authors = authorRepository.findAllById(dto.authorId());
 
     if (authors.size() != authorIds.size()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One or more of the specified authors were not found in the system");
@@ -82,7 +83,7 @@ public class BookService {
   }
 
   private void resolveGenres(BookCreateDTO dto, Book book) {
-    Set<UUID> genreIds = dto.genreIds();
+    Set<UUID> genreIds = dto.genreId();
 
     List<Genre> genres = genreRepository.findAllById(genreIds);
 
@@ -93,7 +94,7 @@ public class BookService {
     genres.forEach(book::addGenre);
   }
 
-  private void resolveEdition(BookCreateDTO dto, Book book) {
+  private Edition resolveEdition(BookCreateDTO dto, Book book) {
     Edition edition = new Edition();
     edition.setIsbn(dto.edition().isbn());
     edition.setEditionNumber(dto.edition().editionNumber());
@@ -109,5 +110,6 @@ public class BookService {
     edition.setPublisher(publisher);
     edition.setBook(book);
     book.getEditions().add(edition);
+    return edition;
   }
 }

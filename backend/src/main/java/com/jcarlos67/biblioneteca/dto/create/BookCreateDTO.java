@@ -11,10 +11,10 @@ public record BookCreateDTO(
         String title,
 
         @NotNull(message = "The book's genre is required")
-        Set<UUID> genreIds,
+        Set<UUID> genreId,
 
         @NotNull(message = "The book's author is required")
-        Set<UUID> authors,
+        Set<UUID> authorId,
 
         @NotNull(message = "The book's genre is required")
         EditionCreateDTO edition
