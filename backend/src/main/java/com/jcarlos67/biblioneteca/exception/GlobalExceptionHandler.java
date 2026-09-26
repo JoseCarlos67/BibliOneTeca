@@ -39,7 +39,20 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(DataIntegrityViolationException.class)
   public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(DataIntegrityViolationException e) {
     Map<String, String> error = new HashMap<>();
-    error.put("error", "It is not possible to delete an author who is linked to registered works");
+
+    String rootMessage = e.getMostSpecificCause().getMessage();
+
+    if (rootMessage != null && rootMessage.contains("UK_EDITIONS_ISBN")) {
+      error.put("error", "An edition with the same ISBN is already registered in the system");
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    if (rootMessage != null && rootMessage.contains("FK_AB_AUTHOR")) {
+      error.put("error", "It is not possible to delete an author who is linked to registered works");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
