@@ -30,7 +30,7 @@ public class Book implements Serializable {
   @Column(nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Set<Edition> editions = new HashSet<>();
 
   @JsonIgnore

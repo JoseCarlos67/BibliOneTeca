@@ -27,8 +27,7 @@ public class BookService {
 
   final private PublisherRepository publisherRepository;
 
-  public BookService (BookRepository bookRepository, AuthorRepository authorRepository,
-                      GenreRepository genreRepository, EditionRepository editionRepository, PublisherRepository publisherRepository) {
+  public BookService(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, EditionRepository editionRepository, PublisherRepository publisherRepository) {
     this.bookRepository = bookRepository;
     this.authorRepository = authorRepository;
     this.genreRepository = genreRepository;
@@ -76,12 +75,9 @@ public class BookService {
     List<Author> authors = authorRepository.findAllById(dto.authors());
 
     if (authors.size() != authorIds.size()) {
-      throw new ResponseStatusException(
-              HttpStatus.NOT_FOUND,
-              "One or more of the specified authors were not found in the system"
-      );
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One or more of the specified authors were not found in the system");
     }
-
+    authorRepository.saveAll(authors);
     authors.forEach(book::addAuthor);
   }
 
@@ -91,10 +87,7 @@ public class BookService {
     List<Genre> genres = genreRepository.findAllById(genreIds);
 
     if (genres.size() != genreIds.size()) {
-      throw new ResponseStatusException(
-              HttpStatus.NOT_FOUND,
-              "One or more of the specified genres were not found in the system"
-      );
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One or more of the specified genres were not found in the system");
     }
 
     genres.forEach(book::addGenre);
@@ -111,16 +104,10 @@ public class BookService {
     edition.setSynopsis(dto.edition().synopsis());
     edition.setBook(book);
 
-    Optional<Publisher> publisher = Optional.of(new Publisher());
-    publisher = publisherRepository.findById(dto.edition().publisherId());
+    Publisher publisher = publisherRepository.findById(dto.edition().publisherId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher not found in the system"));
 
-    if (publisher.isPresent()) {
-      edition.setPublisher(publisher.get());
-
-      editionRepository.save(edition);
-
-      edition.setBook(book);
-    }
-
+    edition.setPublisher(publisher);
+    edition.setBook(book);
+    book.getEditions().add(edition);
   }
 }
