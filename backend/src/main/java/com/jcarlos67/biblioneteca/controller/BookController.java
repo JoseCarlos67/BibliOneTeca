@@ -2,7 +2,9 @@ package com.jcarlos67.biblioneteca.controller;
 
 import com.jcarlos67.biblioneteca.dto.create.BookCreateDTO;
 import com.jcarlos67.biblioneteca.dto.response.BookResponseDTO;
+import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.model.collection.Book;
+import com.jcarlos67.biblioneteca.model.collection.Genre;
 import com.jcarlos67.biblioneteca.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,33 +25,55 @@ public class BookController {
   @Autowired
   private BookService service;
 
-//  @Operation(summary = "Search for all registered books")
-//  @GetMapping
-//  public ResponseEntity<List<BookResponseDTO>> findAll() {
-//    return ResponseEntity.ok(
-//            service.findAll()
-//                    .stream()
-//                    .map(book -> new BookResponseDTO(
-//                            book.getTitle(),
-//                            book.getGenreSet().stream().toList(),
-//                            book.getAuthorSet().stream().toList()
-//                    ))
-//                    .toList()
-//    );
-//  }
-//
-//  @Operation(summary = "Search for book by ID", description = "Returns a specific book based on the provided ID")
-//  @GetMapping("{id}")
-//  public ResponseEntity<BookResponseDTO> findById(@PathVariable UUID id) {
-//    return service.findById(id)
-//            .map(book -> new BookResponseDTO(
-//                    book.getTitle(),
-//                    book.getGenreSet().stream().toList(),
-//                    book.getAuthorSet().stream().toList()
-//            ))
-//            .map(ResponseEntity::ok)
-//            .orElseGet(() -> ResponseEntity.notFound().build());
-//  }
+  @Operation(summary = "Search for all registered books")
+  @GetMapping
+  public ResponseEntity<List<BookResponseDTO>> findAll() {
+    return ResponseEntity.ok(
+            service.findAll()
+                    .stream()
+                    .flatMap(book -> book.getEditions().stream().map(edition ->
+                            new BookResponseDTO(
+                                    book.getTitle(),
+                                    book.getGenreSet().stream().map(Genre::getName).toList(),
+                                    book.getAuthorSet().stream().map(Author::getName).toList(),
+                                    edition.getIsbn(),
+                                    edition.getEditionNumber(),
+                                    edition.getYear_publication(),
+                                    edition.getLanguage(),
+                                    edition.getPage_number(),
+                                    edition.getCover(),
+                                    edition.getSynopsis(),
+                                    edition.getPublisher().getTradeName(),
+                                    edition.getPhysicalCopies().size()
+                            )
+                    )).toList()
+    );
+  }
+
+  @Operation(summary = "Search for book by ID", description = "Returns a specific book based on the provided ID")
+  @GetMapping("{id}")
+  public ResponseEntity<List<BookResponseDTO>> findById(@PathVariable UUID id) {
+    return ResponseEntity.ok(
+            service.findById(id)
+            .stream()
+            .flatMap(book -> book.getEditions().stream().map(edition ->
+                    new BookResponseDTO(
+                            book.getTitle(),
+                            book.getGenreSet().stream().map(Genre::getName).toList(),
+                            book.getAuthorSet().stream().map(Author::getName).toList(),
+                            edition.getIsbn(),
+                            edition.getEditionNumber(),
+                            edition.getYear_publication(),
+                            edition.getLanguage(),
+                            edition.getPage_number(),
+                            edition.getCover(),
+                            edition.getSynopsis(),
+                            edition.getPublisher().getTradeName(),
+                            edition.getPhysicalCopies().size()
+                    )
+            )).toList()
+    );
+  }
 
   @Operation(summary = "Register a new book", description = "Creates a book with its authors and genres. Existing authors are linked by id, new authors are created inline.")
   @PostMapping
