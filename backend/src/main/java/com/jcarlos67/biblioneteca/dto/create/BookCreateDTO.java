@@ -16,7 +16,7 @@ public record BookCreateDTO(
         @NotNull(message = "The book's author is required")
         Set<UUID> authorId,
 
-        @NotNull(message = "The book's genre is required")
+        @NotNull(message = "The book's edition is required")
         EditionCreateDTO edition
 ) {
 }
