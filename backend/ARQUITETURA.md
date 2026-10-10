@@ -1,4 +1,4 @@
-# 🏗️ Arquitetura — API Biblioneteca
+git # 🏗️ Arquitetura — API Biblioneteca
 
 > **Stack:** Java 21 · Spring Boot 4 · Spring Data JPA · Oracle DB · Flyway · Lombok · OpenAPI (Swagger)
 
