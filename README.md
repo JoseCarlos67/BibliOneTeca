@@ -76,14 +76,6 @@ biblioneteca/
 ├── docs/             # Diagramas, DER e UML do projeto
 └── docker-compose.yml # Containers para ambiente local (Oracle Database)
 ```
----
 
-## UML
-![Diagrama UML do Projeto](./docs/UML.png)
-
-## DER
-![Diagrama de Banco de Dados](./docs/DB.png)
-
----
 
 Em desenvolvimento por José Carlos - [LinkedIn](linkedin.com/in/josecarlosesteves/)
