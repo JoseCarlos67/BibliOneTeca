@@ -1,6 +1,8 @@
 package com.jcarlos67.biblioneteca.dto.create;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
@@ -10,13 +12,14 @@ public record BookCreateDTO(
         @NotBlank(message = "The book's name is required")
         String title,
 
-        @NotNull(message = "The book's genre is required")
-        Set<UUID> genreId,
+        @NotEmpty(message = "The book's genre is required")
+        Set<@NotNull UUID> genreId,
 
-        @NotNull(message = "The book's author is required")
-        Set<UUID> authorId,
+        @NotEmpty(message = "The book's author is required")
+        Set<@NotNull UUID> authorId,
 
         @NotNull(message = "The book's edition is required")
+        @Valid
         EditionCreateDTO edition
 ) {
 }

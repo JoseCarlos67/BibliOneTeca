@@ -22,7 +22,7 @@ public record EditionCreateDTO(
         Integer yearPublication,
 
         @NotBlank(message = "The language of the book is mandatory")
-        @Min(value = 3,message = "The author's name must have at least {value} letters")
+        @Size(min = 3,message = "The author's language must have at least {min} letters")
         String language,
 
         @NotNull(message = "The number of pages in the book is mandatory")
