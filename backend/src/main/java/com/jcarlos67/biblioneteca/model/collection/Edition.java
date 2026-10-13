@@ -47,7 +47,6 @@ public class Edition implements Serializable {
   private String cover;
 
   @Column(nullable = false)
-  @Lob
   private String synopsis;
 
   @JsonIgnore
