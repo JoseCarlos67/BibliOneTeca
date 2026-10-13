@@ -6,7 +6,6 @@ import com.jcarlos67.biblioneteca.dto.update.AuthorUpdateDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.repository.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +31,7 @@ public class AuthorService {
   }
 
   public AuthorResponseDTO createAuthor(AuthorCreateDTO newAuthorDTO) {
-    Author newAuthorEntity = new Author();
-    resolveAuthor(newAuthorDTO, newAuthorEntity);
+    Author newAuthorEntity = newAuthorDTO.mapToAuthor();
 
     repository.save(newAuthorEntity);
 
@@ -41,14 +39,12 @@ public class AuthorService {
   }
 
   public void delete(UUID id) {
-    if (!repository.existsById(id))
-      throw new EntityNotFoundException("Author not found!");
+    Author author = repository.findById(id)
+            .orElseThrow(() ->
+                    new EntityNotFoundException("Author not found")
+            );
 
-    try {
-      repository.deleteById(id);
-    } catch (EmptyResultDataAccessException e) {
-      e.printStackTrace();
-    }
+    repository.deleteById(id);
   }
 
   public AuthorResponseDTO updateAuthor(UUID id, AuthorUpdateDTO updateDTO) {
@@ -67,13 +63,6 @@ public class AuthorService {
             author.getDateOfDeath(),
             author.getNationality()
     );
-  }
-
-  private void resolveAuthor(AuthorCreateDTO authorDTO, Author authorEntity) {
-    authorEntity.setName(authorDTO.name());
-    authorEntity.setDateOfBirth(authorDTO.dateOfBirth());
-    authorEntity.setDateOfDeath(authorDTO.dateOfDeath());
-    authorEntity.setNationality(authorDTO.nationality());
   }
 
 }
