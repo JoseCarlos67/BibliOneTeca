@@ -1,8 +1,13 @@
 package com.jcarlos67.biblioneteca.dto.create;
 
+import com.jcarlos67.biblioneteca.model.collection.Book;
+import com.jcarlos67.biblioneteca.model.collection.Edition;
+import com.jcarlos67.biblioneteca.model.collection.Publisher;
 import jakarta.validation.constraints.*;
 import net.bytebuddy.utility.nullability.MaybeNull;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 

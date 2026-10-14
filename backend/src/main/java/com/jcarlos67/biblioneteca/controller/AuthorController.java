@@ -1,6 +1,7 @@
 package com.jcarlos67.biblioneteca.controller;
 
 import com.jcarlos67.biblioneteca.dto.create.AuthorCreateDTO;
+import com.jcarlos67.biblioneteca.dto.request.AuthorRequestDTO;
 import com.jcarlos67.biblioneteca.dto.response.AuthorResponseDTO;
 import com.jcarlos67.biblioneteca.dto.update.AuthorUpdateDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/authors")
@@ -24,12 +27,24 @@ public class AuthorController {
   @Autowired
   private AuthorService service;
 
-  @Operation(summary = "Search for all registered authors")
   @GetMapping
-  public ResponseEntity<List<Author>> findAll() {
-    List<Author> authorList = service.findAll();
-    return ResponseEntity.ok().body(authorList);
+  public ResponseEntity<List<AuthorResponseDTO>> find(
+          @RequestParam(value = "name", required = false) String name,
+          @RequestParam(value = "nationality", required = false) String nationality
+          ) {
+
+    List<Author> authors = service.find(name, nationality);
+    List<AuthorResponseDTO> authorResponseDTO = authors.stream().map(author -> new AuthorResponseDTO(author.getName(), author.getDateOfBirth(), author.getDateOfDeath(), author.getNationality())).collect(Collectors.toList());
+
+    return ResponseEntity.ok(authorResponseDTO);
   }
+
+//  @Operation(summary = "Search for all registered authors")
+//  @GetMapping
+//  public ResponseEntity<List<Author>> findAll() {
+//    List<Author> authorList = service.findAll();
+//    return ResponseEntity.ok().body(authorList);
+//  }
 
   @Operation(summary = "Search for author by ID", description = "Returns a specific author based on the provided ID")
   @GetMapping("{id}")

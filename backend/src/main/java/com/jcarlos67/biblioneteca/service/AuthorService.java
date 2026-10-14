@@ -30,6 +30,19 @@ public class AuthorService {
     return author;
   }
 
+  public List<Author> find(String name, String nationality) {
+    if (name != null && nationality != null)
+      return repository.findByNameAndNationality(name, nationality);
+
+    if (name != null)
+      return repository.findByName(name);
+
+    if (nationality != null)
+      return repository.findByNationality(nationality);
+
+    return repository.findAll();
+  }
+
   public AuthorResponseDTO createAuthor(AuthorCreateDTO newAuthorDTO) {
     Author newAuthorEntity = newAuthorDTO.mapToAuthor();
 

@@ -67,6 +67,7 @@ public class BookService {
     Edition newEdition = resolveEdition(dto, newBook);
 
     bookRepository.save(newBook);
+    editionRepository.save(newEdition);
 
     return new BookResponseDTO(newBook.getTitle(), newBook.getGenreSet().stream().map(Genre::getName).toList(), newBook.getAuthorSet().stream().map(Author::getName).toList(), newEdition.getIsbn(), newEdition.getEditionNumber(), newEdition.getYear_publication(), newEdition.getLanguage(), newEdition.getPage_number(), newEdition.getCover(), newEdition.getSynopsis(), newEdition.getPublisher().getTradeName(), newEdition.getPhysicalCopies().size());
   }
