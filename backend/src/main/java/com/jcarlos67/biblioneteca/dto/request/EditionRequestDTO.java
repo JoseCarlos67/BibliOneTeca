@@ -6,12 +6,12 @@ public record EditionRequestDTO(
         UUID id,
         String isbn,
         Integer editionNumber,
-        Integer publicationYear,
+        int yearPublication,
         String language,
         Integer pageNumber,
         String urlCover,
         String synopsis,
-        PublisherRequestDTO publisher,
+        UUID publisherId,
         BookRequestDTO book
 ) {
 }

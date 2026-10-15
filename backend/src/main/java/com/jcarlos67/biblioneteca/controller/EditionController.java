@@ -1,13 +1,17 @@
 package com.jcarlos67.biblioneteca.controller;
 
 import com.jcarlos67.biblioneteca.dto.EditionDTO;
+import com.jcarlos67.biblioneteca.dto.request.EditionRequestDTO;
 import com.jcarlos67.biblioneteca.model.collection.Edition;
 import com.jcarlos67.biblioneteca.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,17 @@ public class EditionController {
   public ResponseEntity<Void> delete(@PathVariable(name = "id") String idString) {
     UUID id = UUID.fromString(idString);
     service.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Void> updateEdition(@PathVariable UUID id, @Validated @RequestBody EditionRequestDTO dto) {
+    Optional<Edition> editionOptional = service.findById(id);
+
+    if (editionOptional.isEmpty())
+      return ResponseEntity.notFound().build();
+
+    service.updateEdition(id, dto);
     return ResponseEntity.noContent().build();
   }
 
