@@ -1,17 +1,11 @@
 package com.jcarlos67.biblioneteca.dto.create;
 
-import com.jcarlos67.biblioneteca.model.collection.Book;
-import com.jcarlos67.biblioneteca.model.collection.Edition;
-import com.jcarlos67.biblioneteca.model.collection.Publisher;
 import jakarta.validation.constraints.*;
-import net.bytebuddy.utility.nullability.MaybeNull;
 import org.hibernate.validator.constraints.URL;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
-public record EditionCreateDTO(
+public record EditionRequestDTO(
         @NotBlank(message = "The books's ISBN is mandatory")
         @Size(min = 10, max = 12, message = "The book's ISBN must be between {min} and {max} characters lon")
         String isbn,

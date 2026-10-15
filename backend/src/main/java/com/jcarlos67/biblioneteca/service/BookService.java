@@ -1,9 +1,13 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.dto.create.BookCreateDTO;
+import com.jcarlos67.biblioneteca.dto.EditionDTO;
+import com.jcarlos67.biblioneteca.dto.create.EditionRequestDTO;
+import com.jcarlos67.biblioneteca.dto.request.BookRequestDTO;
+import com.jcarlos67.biblioneteca.dto.request.BookUpdateRequestDTO;
 import com.jcarlos67.biblioneteca.dto.response.BookResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.*;
 import com.jcarlos67.biblioneteca.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,6 +48,11 @@ public class BookService {
     return book;
   }
 
+  // Implementar
+  public Optional<Book> find(String name, String isbn, int year_publication, String language, int page_number, String Publisher) {
+    return null;
+  }
+
   public Book insert(Book book) {
     return bookRepository.save(book);
   }
@@ -56,7 +65,7 @@ public class BookService {
     }
   }
 
-  public BookResponseDTO create(BookCreateDTO dto) {
+  public BookResponseDTO create(BookRequestDTO dto) {
     Book newBook = new Book();
     newBook.setTitle(dto.title());
 
@@ -72,7 +81,17 @@ public class BookService {
     return new BookResponseDTO(newBook.getTitle(), newBook.getGenreSet().stream().map(Genre::getName).toList(), newBook.getAuthorSet().stream().map(Author::getName).toList(), newEdition.getIsbn(), newEdition.getEditionNumber(), newEdition.getYear_publication(), newEdition.getLanguage(), newEdition.getPage_number(), newEdition.getCover(), newEdition.getSynopsis(), newEdition.getPublisher().getTradeName(), newEdition.getPhysicalCopies().size());
   }
 
-  private void resolveAuthors(BookCreateDTO dto, Book book) {
+  public void updateBook(UUID id, BookRequestDTO dto) {
+    Book book = bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not found"));
+
+    book.setTitle(dto.title());
+    resolveAuthors(dto, book);
+    resolveGenres(dto, book);
+
+    bookRepository.save(book);
+  }
+
+  private void resolveAuthors(BookRequestDTO dto, Book book) {
     Set<UUID> authorIds = dto.authorId();
 
     List<Author> authors = authorRepository.findAllById(dto.authorId());
@@ -84,7 +103,7 @@ public class BookService {
     authors.forEach(book::addAuthor);
   }
 
-  private void resolveGenres(BookCreateDTO dto, Book book) {
+  private void resolveGenres(BookRequestDTO dto, Book book) {
     Set<UUID> genreIds = dto.genreId();
 
     List<Genre> genres = genreRepository.findAllById(genreIds);
@@ -96,18 +115,18 @@ public class BookService {
     genres.forEach(book::addGenre);
   }
 
-  private Edition resolveEdition(BookCreateDTO dto, Book book) {
+  private Edition resolveEdition(BookRequestDTO dto, Book book) {
     Edition edition = new Edition();
-    edition.setIsbn(dto.edition().isbn());
-    edition.setEditionNumber(dto.edition().editionNumber());
-    edition.setYear_publication(dto.edition().yearPublication());
-    edition.setLanguage(dto.edition().language());
-    edition.setPage_number(dto.edition().pageNumber());
-    edition.setCover(dto.edition().urlCover());
-    edition.setSynopsis(dto.edition().synopsis());
+    edition.setIsbn(dto.edition().getIsbn());
+    edition.setEditionNumber(dto.edition().getEdition_number());
+    edition.setYear_publication(dto.edition().getYear_publication());
+    edition.setLanguage(dto.edition().getLanguage());
+    edition.setPage_number(dto.edition().getPage_number());
+    edition.setCover(dto.edition().getCover());
+    edition.setSynopsis(dto.edition().getSynopsis());
     edition.setBook(book);
 
-    Publisher publisher = publisherRepository.findById(dto.edition().publisherId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher not found in the system"));
+    Publisher publisher = publisherRepository.findById(dto.edition().getPublisher().getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher not found in the system"));
 
     edition.setPublisher(publisher);
     edition.setBook(book);

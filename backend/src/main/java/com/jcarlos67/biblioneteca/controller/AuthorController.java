@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -74,9 +75,16 @@ public class AuthorController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<AuthorResponseDTO> updateAuthor(@PathVariable UUID id, @Valid @RequestBody AuthorUpdateDTO updateDTO) {
-    AuthorResponseDTO updatedAuthor = service.updateAuthor(id, updateDTO);
-    return ResponseEntity.ok(updatedAuthor);
+  public ResponseEntity<Void> updateAuthor(@PathVariable UUID id, @Valid @RequestBody AuthorUpdateDTO authorUpdateDTO) {
+    Optional<Author> authorOptional = service.findById(id);
+
+    if(authorOptional.isEmpty()){
+      return ResponseEntity.notFound().build();
+    }
+
+    service.updateAuthor(id, authorUpdateDTO);
+    return ResponseEntity.noContent().build();
+
   }
 
 }

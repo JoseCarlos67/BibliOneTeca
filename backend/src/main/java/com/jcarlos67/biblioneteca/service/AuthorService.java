@@ -60,7 +60,7 @@ public class AuthorService {
     repository.deleteById(id);
   }
 
-  public AuthorResponseDTO updateAuthor(UUID id, AuthorUpdateDTO updateDTO) {
+  public void updateAuthor(UUID id, AuthorUpdateDTO updateDTO) {
     Author author = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
 
     author.setName(updateDTO.name());
@@ -68,14 +68,7 @@ public class AuthorService {
     author.setDateOfDeath(updateDTO.dateOfDeath());
     author.setNationality(updateDTO.nationality());
 
-    author = repository.save(author);
-
-    return new AuthorResponseDTO(
-            author.getName(),
-            author.getDateOfBirth(),
-            author.getDateOfDeath(),
-            author.getNationality()
-    );
+    repository.save(author);
   }
 
 }
