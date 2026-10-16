@@ -1,6 +1,6 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.dto.request.EditionRequestDTO;
+import com.jcarlos67.biblioneteca.dto.EditionRequestDTO;
 import com.jcarlos67.biblioneteca.model.collection.Edition;
 import com.jcarlos67.biblioneteca.model.collection.Publisher;
 import com.jcarlos67.biblioneteca.repository.EditionRepository;

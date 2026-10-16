@@ -1,6 +1,5 @@
-package com.jcarlos67.biblioneteca.dto.request;
+package com.jcarlos67.biblioneteca.dto;
 
-import com.jcarlos67.biblioneteca.dto.EditionDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,6 +20,6 @@ public record BookRequestDTO(
 
         @NotNull(message = "The book's edition is required")
         @Valid
-        EditionDTO edition
+        EditionRequestDTO edition
 ) {
 }

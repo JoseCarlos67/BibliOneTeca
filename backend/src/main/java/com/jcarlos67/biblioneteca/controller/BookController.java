@@ -1,7 +1,7 @@
 package com.jcarlos67.biblioneteca.controller;
 
-import com.jcarlos67.biblioneteca.dto.request.BookRequestDTO;
-import com.jcarlos67.biblioneteca.dto.response.BookResponseDTO;
+import com.jcarlos67.biblioneteca.dto.BookRequestDTO;
+import com.jcarlos67.biblioneteca.dto.BookResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.model.collection.Book;
 import com.jcarlos67.biblioneteca.model.collection.Genre;

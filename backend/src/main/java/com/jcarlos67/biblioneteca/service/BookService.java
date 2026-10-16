@@ -1,10 +1,7 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.dto.EditionDTO;
-import com.jcarlos67.biblioneteca.dto.create.EditionRequestDTO;
-import com.jcarlos67.biblioneteca.dto.request.BookRequestDTO;
-import com.jcarlos67.biblioneteca.dto.request.BookUpdateRequestDTO;
-import com.jcarlos67.biblioneteca.dto.response.BookResponseDTO;
+import com.jcarlos67.biblioneteca.dto.BookRequestDTO;
+import com.jcarlos67.biblioneteca.dto.BookResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.*;
 import com.jcarlos67.biblioneteca.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -117,16 +114,16 @@ public class BookService {
 
   private Edition resolveEdition(BookRequestDTO dto, Book book) {
     Edition edition = new Edition();
-    edition.setIsbn(dto.edition().getIsbn());
-    edition.setEditionNumber(dto.edition().getEdition_number());
-    edition.setYear_publication(dto.edition().getYear_publication());
-    edition.setLanguage(dto.edition().getLanguage());
-    edition.setPage_number(dto.edition().getPage_number());
-    edition.setCover(dto.edition().getCover());
-    edition.setSynopsis(dto.edition().getSynopsis());
+    edition.setIsbn(dto.edition().isbn());
+    edition.setEditionNumber(dto.edition().editionNumber());
+    edition.setYear_publication(dto.edition().yearPublication());
+    edition.setLanguage(dto.edition().language());
+    edition.setPage_number(dto.edition().pageNumber());
+    edition.setCover(dto.edition().urlCover());
+    edition.setSynopsis(dto.edition().synopsis());
     edition.setBook(book);
 
-    Publisher publisher = publisherRepository.findById(dto.edition().getPublisher().getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher not found in the system"));
+    Publisher publisher = publisherRepository.findById(dto.edition().publisherId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher not found in the system"));
 
     edition.setPublisher(publisher);
     edition.setBook(book);

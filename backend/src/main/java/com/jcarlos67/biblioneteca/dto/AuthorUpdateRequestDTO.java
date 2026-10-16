@@ -1,4 +1,4 @@
-package com.jcarlos67.biblioneteca.dto.update;
+package com.jcarlos67.biblioneteca.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
-public record AuthorUpdateDTO(
+public record AuthorUpdateRequestDTO(
         @NotBlank(message = "The author's name is required")
         String name,
 
@@ -14,10 +14,10 @@ public record AuthorUpdateDTO(
         @PastOrPresent(message = "The date of birth cannot be in the future")
         LocalDate dateOfBirth,
 
-        @PastOrPresent(message = "The date of birth cannot be in the future")
+        @PastOrPresent(message = "The date of death cannot be in the future")
         LocalDate dateOfDeath,
 
-        @NotBlank (message = "The author's nationality is required")
+        @NotBlank(message = "The author's nationality is required")
         String nationality
 ) {
 }

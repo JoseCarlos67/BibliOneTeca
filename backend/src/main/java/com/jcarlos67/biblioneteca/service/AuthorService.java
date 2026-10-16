@@ -1,8 +1,8 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.dto.create.AuthorCreateDTO;
-import com.jcarlos67.biblioneteca.dto.response.AuthorResponseDTO;
-import com.jcarlos67.biblioneteca.dto.update.AuthorUpdateDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorRequestDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorResponseDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorUpdateRequestDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.repository.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -43,7 +43,7 @@ public class AuthorService {
     return repository.findAll();
   }
 
-  public AuthorResponseDTO createAuthor(AuthorCreateDTO newAuthorDTO) {
+  public AuthorResponseDTO createAuthor(AuthorRequestDTO newAuthorDTO) {
     Author newAuthorEntity = newAuthorDTO.mapToAuthor();
 
     repository.save(newAuthorEntity);
@@ -60,7 +60,7 @@ public class AuthorService {
     repository.deleteById(id);
   }
 
-  public void updateAuthor(UUID id, AuthorUpdateDTO updateDTO) {
+  public void updateAuthor(UUID id, AuthorUpdateRequestDTO updateDTO) {
     Author author = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
 
     author.setName(updateDTO.name());

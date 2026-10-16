@@ -1,7 +1,7 @@
 package com.jcarlos67.biblioneteca.controller;
 
-import com.jcarlos67.biblioneteca.dto.EditionDTO;
-import com.jcarlos67.biblioneteca.dto.request.EditionRequestDTO;
+import com.jcarlos67.biblioneteca.dto.EditionRequestDTO;
+import com.jcarlos67.biblioneteca.dto.EditionResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.Edition;
 import com.jcarlos67.biblioneteca.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,9 @@ public class EditionController {
   private EditionService service;
 
   @GetMapping
-  public ResponseEntity<List<EditionDTO>> findAll() {
+  public ResponseEntity<List<EditionResponseDTO>> findAll() {
     List<Edition> editionList = service.findAll();
-    List<EditionDTO> editionDTOS = editionList.stream().map(x -> new EditionDTO(x)).collect(Collectors.toList());
+    List<EditionResponseDTO> editionDTOS = editionList.stream().map(EditionResponseDTO::new).collect(Collectors.toList());
     return ResponseEntity.ok().body(editionDTOS);
   }
 

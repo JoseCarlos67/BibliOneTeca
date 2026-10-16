@@ -1,9 +1,8 @@
 package com.jcarlos67.biblioneteca.controller;
 
-import com.jcarlos67.biblioneteca.dto.create.AuthorCreateDTO;
-import com.jcarlos67.biblioneteca.dto.request.AuthorRequestDTO;
-import com.jcarlos67.biblioneteca.dto.response.AuthorResponseDTO;
-import com.jcarlos67.biblioneteca.dto.update.AuthorUpdateDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorRequestDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorResponseDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorUpdateRequestDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +61,7 @@ public class AuthorController {
   }
 
   @PostMapping
-  public ResponseEntity<AuthorResponseDTO> createAuthor(@Valid @RequestBody AuthorCreateDTO newAuthor) {
+  public ResponseEntity<AuthorResponseDTO> createAuthor(@Valid @RequestBody AuthorRequestDTO newAuthor) {
     AuthorResponseDTO authorResponseDTO = service.createAuthor(newAuthor);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(authorResponseDTO);
@@ -75,7 +74,7 @@ public class AuthorController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Void> updateAuthor(@PathVariable UUID id, @Valid @RequestBody AuthorUpdateDTO authorUpdateDTO) {
+  public ResponseEntity<Void> updateAuthor(@PathVariable UUID id, @Valid @RequestBody AuthorUpdateRequestDTO authorUpdateDTO) {
     Optional<Author> authorOptional = service.findById(id);
 
     if(authorOptional.isEmpty()){
