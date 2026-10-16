@@ -39,6 +39,10 @@ public record EditionRequestDTO(
         String synopsis,
 
         @NotNull(message = "The book needs a publisher")
-        UUID publisherId
+        UUID publisherId,
+
+        @Min(value = 1, message = "The minimum number of copies is {value}")
+        @Positive(message = "The number of copies must be positive")
+        Integer initialPhysicalCopies
 ) {
 }

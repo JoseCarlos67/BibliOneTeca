@@ -187,7 +187,7 @@ múltiplas edições por livro. **[confirmar no diagrama]**.
 
 ---
 
-### 3.2 `updateAuthor` — nome errado e redundância
+### 3.2 `updateBook` — nome errado e redundância
 
 ```java
 @PutMapping("/{id}")
@@ -202,7 +202,7 @@ public ResponseEntity<Void> updateAuthor(@PathVariable UUID id, @Validated @Requ
 
 Problemas:
 
-- Nome `updateAuthor` deveria ser `updateBook`.
+- Nome `updateBook` deveria ser `updateBook`.
 - Falta `@Operation` (padrão dos outros endpoints).
 - O `Optional` é redundante: `service.updateBook` já lança
   `EntityNotFoundException` se não existir.
@@ -241,7 +241,7 @@ Se a coleção não estiver inicializada (não é o caso atual, pois é
 - [ ] 2.7 Definir contrato de `updateBook` (atualiza Edition ou não).
 - [ ] 2.8 Garantir cascade de `PhysicalCopy` via `Book`.
 - [ ] 3.1 Revisar retorno de `findById`.
-- [ ] 3.2 Renomear `updateAuthor` -> `updateBook` e limpar redundância.
+- [ ] 3.2 Renomear `updateBook` -> `updateBook` e limpar redundância.
 - [ ] 3.3 Tratar `publisher` nulo no mapeamento.
 - [ ] 3.4 Padronizar acesso a `physicalCopies`.
 

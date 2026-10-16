@@ -20,9 +20,6 @@ public record BookRequestDTO(
 
         @NotNull(message = "The book's edition is required")
         @Valid
-        EditionRequestDTO edition,
-
-        @NotNull(message = "The book's initialPhysicalCopies is required")
-        Integer initialPhysicalCopies
+        EditionRequestDTO edition
 ) {
 }

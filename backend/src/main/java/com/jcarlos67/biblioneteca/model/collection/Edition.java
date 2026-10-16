@@ -78,6 +78,11 @@ public class Edition implements Serializable {
     this.publisher = publisher;
   }
 
+  public void addPhysicalCopy(PhysicalCopy copy) {
+    this.physicalCopies.add(copy);
+    copy.setEdition(this);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
