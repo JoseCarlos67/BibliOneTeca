@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BookService {
@@ -28,12 +25,15 @@ public class BookService {
 
   final private PublisherRepository publisherRepository;
 
-  public BookService(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, EditionRepository editionRepository, PublisherRepository publisherRepository) {
+  final private PhysicalCopyRepository physicalCopyRepository;
+
+  public BookService(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, EditionRepository editionRepository, PublisherRepository publisherRepository, PhysicalCopyRepository physicalCopyRepository) {
     this.bookRepository = bookRepository;
     this.authorRepository = authorRepository;
     this.genreRepository = genreRepository;
     this.editionRepository = editionRepository;
     this.publisherRepository = publisherRepository;
+    this.physicalCopyRepository = physicalCopyRepository;
   }
 
   public List<Book> findAll() {
@@ -48,10 +48,6 @@ public class BookService {
   // Implementar
   public Optional<Book> find(String name, String isbn, int year_publication, String language, int page_number, String Publisher) {
     return null;
-  }
-
-  public Book insert(Book book) {
-    return bookRepository.save(book);
   }
 
   public void delete(UUID id) {
@@ -75,6 +71,11 @@ public class BookService {
     bookRepository.save(newBook);
     editionRepository.save(newEdition);
 
+    List<PhysicalCopy> physicalCopies = createPhysicalCopies(dto.initialPhysicalCopies(), newEdition);
+    newEdition.getPhysicalCopies().addAll(physicalCopies);
+    physicalCopyRepository.saveAll(physicalCopies);
+
+
     return new BookResponseDTO(newBook.getTitle(), newBook.getGenreSet().stream().map(Genre::getName).toList(), newBook.getAuthorSet().stream().map(Author::getName).toList(), newEdition.getIsbn(), newEdition.getEditionNumber(), newEdition.getYear_publication(), newEdition.getLanguage(), newEdition.getPage_number(), newEdition.getCover(), newEdition.getSynopsis(), newEdition.getPublisher().getTradeName(), newEdition.getPhysicalCopies().size());
   }
 
@@ -86,6 +87,16 @@ public class BookService {
     resolveGenres(dto, book);
 
     bookRepository.save(book);
+  }
+
+  private List<PhysicalCopy> createPhysicalCopies(int quantity, Edition edition) {
+    List<PhysicalCopy> physicalCopies = new ArrayList<>();
+    for (int i = 0; i < quantity; i++) {
+      PhysicalCopy physicalCopy = new PhysicalCopy(edition);
+      physicalCopies.add(physicalCopy);
+    }
+
+    return physicalCopies;
   }
 
   private void resolveAuthors(BookRequestDTO dto, Book book) {

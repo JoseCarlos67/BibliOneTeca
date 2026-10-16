@@ -40,12 +40,13 @@ public class PhysicalCopy implements Serializable {
   public PhysicalCopy(){
   }
 
-  public PhysicalCopy(Edition edition, PhysicalCopyStatus status) {
+  public PhysicalCopy(Edition edition) {
+    this.id = UUID.randomUUID();
     this.edition = edition;
-    this.status = status;
+    this.status = PhysicalCopyStatus.AVAILABLE;
+    this.generateAssetCode();
   }
 
-  @PrePersist
   private void generateAssetCode() {
     if (this.assetCode == null && this.edition != null && this.id != null) {
       Genre[] genres = edition.getBook().getGenreSet().stream()
@@ -53,17 +54,19 @@ public class PhysicalCopy implements Serializable {
               .toArray(Genre[]::new);
 
       StringBuilder prefix = new StringBuilder();
-      for (int i = 0; i < genres.length; i++) {
-        if (genres[i] != null) {
-          prefix.append(genres[i].getName().substring(0, 2).toUpperCase());
+      for (Genre genre : genres) {
+        if (genre != null) {
+          prefix.append(genre.getName().substring(0, 2).toUpperCase());
         }
       }
 
       String sufix = String.valueOf(this.id);
       int indice = sufix.indexOf('-');
-      sufix = sufix.substring(0, indice);
+      if (indice > 0) {
+        sufix = sufix.substring(0, indice);
+      }
 
-      assetCode = prefix.toString() + sufix;
+      this.assetCode = prefix.toString() + sufix;
     }
   }
 

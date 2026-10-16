@@ -1,7 +1,12 @@
 package com.jcarlos67.biblioneteca.service;
 
+import com.jcarlos67.biblioneteca.model.collection.Edition;
+import com.jcarlos67.biblioneteca.model.collection.PhysicalCopy;
 import com.jcarlos67.biblioneteca.repository.*;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PhysicalCopyService {
@@ -25,4 +30,7 @@ public class PhysicalCopyService {
     this.authorRepository = authorRepository;
     this.publisherRepository = publisherRepository;
   }
+
+
+
 }

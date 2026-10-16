@@ -115,8 +115,8 @@ public class DevConfig implements CommandLineRunner {
       // Salvando todas as edições em lote
       editionRepository.saveAll(Arrays.asList(ed1, ed2, ed3, ed4));
 
-      PhysicalCopy pc1 = new PhysicalCopy(ed1, PhysicalCopyStatus.AVAILABLE);
-      PhysicalCopy pc2 = new PhysicalCopy(ed2, PhysicalCopyStatus.AVAILABLE);
+      PhysicalCopy pc1 = new PhysicalCopy(ed1);
+      PhysicalCopy pc2 = new PhysicalCopy(ed2);
       physicalCopyRepository.saveAll(Arrays.asList(pc1, pc2));
 
       Client client = new Client("00011122233", "José Esteves", LocalDate.of(2002, 02, 10), "jose@gmail.com", "35997665432", LocalDate.of(2026, 8, 20));
