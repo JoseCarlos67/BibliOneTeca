@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
@@ -58,25 +59,32 @@ public class BookService {
     }
   }
 
+  @Transactional
   public BookResponseDTO create(BookRequestDTO dto) {
     Book newBook = new Book();
     newBook.setTitle(dto.title());
 
     resolveAuthors(dto, newBook);
-
     resolveGenres(dto, newBook);
 
     Edition newEdition = resolveEdition(dto, newBook);
 
     bookRepository.save(newBook);
-    editionRepository.save(newEdition);
 
-    List<PhysicalCopy> physicalCopies = createPhysicalCopies(dto.initialPhysicalCopies(), newEdition);
-    newEdition.getPhysicalCopies().addAll(physicalCopies);
-    physicalCopyRepository.saveAll(physicalCopies);
-
-
-    return new BookResponseDTO(newBook.getTitle(), newBook.getGenreSet().stream().map(Genre::getName).toList(), newBook.getAuthorSet().stream().map(Author::getName).toList(), newEdition.getIsbn(), newEdition.getEditionNumber(), newEdition.getYear_publication(), newEdition.getLanguage(), newEdition.getPage_number(), newEdition.getCover(), newEdition.getSynopsis(), newEdition.getPublisher().getTradeName(), newEdition.getPhysicalCopies().size());
+    return new BookResponseDTO(
+            newBook.getTitle(),
+            newBook.getGenreSet().stream().map(Genre::getName).toList(),
+            newBook.getAuthorSet().stream().map(Author::getName).toList(),
+            newEdition.getIsbn(),
+            newEdition.getEditionNumber(),
+            newEdition.getYear_publication(),
+            newEdition.getLanguage(),
+            newEdition.getPage_number(),
+            newEdition.getCover(),
+            newEdition.getSynopsis(),
+            newEdition.getPublisher().getTradeName(),
+            newEdition.getPhysicalCopies().size()
+    );
   }
 
   public void updateBook(UUID id, BookRequestDTO dto) {
@@ -107,7 +115,7 @@ public class BookService {
     if (authors.size() != authorIds.size()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One or more of the specified authors were not found in the system");
     }
-    authorRepository.saveAll(authors);
+
     authors.forEach(book::addAuthor);
   }
 
@@ -132,13 +140,18 @@ public class BookService {
     edition.setPage_number(dto.edition().pageNumber());
     edition.setCover(dto.edition().urlCover());
     edition.setSynopsis(dto.edition().synopsis());
-    edition.setBook(book);
 
     Publisher publisher = publisherRepository.findById(dto.edition().publisherId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher not found in the system"));
-
     edition.setPublisher(publisher);
-    edition.setBook(book);
-    book.getEditions().add(edition);
+
+    book.addEdition(edition);
+
+    int qtdCopies = dto.edition().initialPhysicalCopies() != null ? dto.edition().initialPhysicalCopies() : 0;
+    for (int i = 0; i < qtdCopies; i++) {
+      PhysicalCopy copy = new PhysicalCopy(edition);
+      edition.addPhysicalCopy(copy);
+    }
+
     return edition;
   }
 }

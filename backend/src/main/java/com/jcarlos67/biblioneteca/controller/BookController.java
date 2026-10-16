@@ -85,13 +85,10 @@ public class BookController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Void> updateAuthor(@PathVariable UUID id, @Validated @RequestBody BookRequestDTO dto) {
+  public ResponseEntity<Void> updateBook(@PathVariable UUID id, @Validated @RequestBody BookRequestDTO dto) {
     Optional<Book> bookOptional = service.findById(id);
-
-    if(bookOptional.isEmpty())
-      return ResponseEntity.notFound().build();
-
     service.updateBook(id, dto);
+
     return ResponseEntity.noContent().build();
   }
 
