@@ -1,7 +1,7 @@
 package com.jcarlos67.biblioneteca.controller;
 
-import com.jcarlos67.biblioneteca.dto.create.BookCreateDTO;
-import com.jcarlos67.biblioneteca.dto.response.BookResponseDTO;
+import com.jcarlos67.biblioneteca.dto.BookRequestDTO;
+import com.jcarlos67.biblioneteca.dto.BookResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.model.collection.Book;
 import com.jcarlos67.biblioneteca.model.collection.Genre;
@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -77,10 +78,18 @@ public class BookController {
 
   @Operation(summary = "Register a new book", description = "Creates a book with its authors and genres. Existing authors are linked by id, new authors are created inline.")
   @PostMapping
-  public ResponseEntity<BookResponseDTO> createBook(@Validated @RequestBody BookCreateDTO dto) {
+  public ResponseEntity<BookResponseDTO> createBook(@Validated @RequestBody BookRequestDTO dto) {
     BookResponseDTO savedBook = service.create(dto);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Void> updateBook(@PathVariable UUID id, @Validated @RequestBody BookRequestDTO dto) {
+    Optional<Book> bookOptional = service.findById(id);
+    service.updateBook(id, dto);
+
+    return ResponseEntity.noContent().build();
   }
 
 }

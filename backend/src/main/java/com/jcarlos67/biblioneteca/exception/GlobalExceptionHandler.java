@@ -51,9 +51,6 @@ public class GlobalExceptionHandler {
       error.put("error", "It is not possible to delete an author who is linked to registered works");
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
-
-
-
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
   }
 

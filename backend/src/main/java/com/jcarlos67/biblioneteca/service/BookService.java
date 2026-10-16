@@ -1,19 +1,17 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.dto.create.BookCreateDTO;
-import com.jcarlos67.biblioneteca.dto.response.BookResponseDTO;
+import com.jcarlos67.biblioneteca.dto.BookRequestDTO;
+import com.jcarlos67.biblioneteca.dto.BookResponseDTO;
 import com.jcarlos67.biblioneteca.model.collection.*;
 import com.jcarlos67.biblioneteca.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class BookService {
@@ -28,12 +26,15 @@ public class BookService {
 
   final private PublisherRepository publisherRepository;
 
-  public BookService(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, EditionRepository editionRepository, PublisherRepository publisherRepository) {
+  final private PhysicalCopyRepository physicalCopyRepository;
+
+  public BookService(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, EditionRepository editionRepository, PublisherRepository publisherRepository, PhysicalCopyRepository physicalCopyRepository) {
     this.bookRepository = bookRepository;
     this.authorRepository = authorRepository;
     this.genreRepository = genreRepository;
     this.editionRepository = editionRepository;
     this.publisherRepository = publisherRepository;
+    this.physicalCopyRepository = physicalCopyRepository;
   }
 
   public List<Book> findAll() {
@@ -45,8 +46,9 @@ public class BookService {
     return book;
   }
 
-  public Book insert(Book book) {
-    return bookRepository.save(book);
+  // Implementar
+  public Optional<Book> find(String name, String isbn, int year_publication, String language, int page_number, String Publisher) {
+    return null;
   }
 
   public void delete(UUID id) {
@@ -57,22 +59,55 @@ public class BookService {
     }
   }
 
-  public BookResponseDTO create(BookCreateDTO dto) {
+  @Transactional
+  public BookResponseDTO create(BookRequestDTO dto) {
     Book newBook = new Book();
     newBook.setTitle(dto.title());
 
     resolveAuthors(dto, newBook);
-
     resolveGenres(dto, newBook);
 
     Edition newEdition = resolveEdition(dto, newBook);
 
     bookRepository.save(newBook);
 
-    return new BookResponseDTO(newBook.getTitle(), newBook.getGenreSet().stream().map(Genre::getName).toList(), newBook.getAuthorSet().stream().map(Author::getName).toList(), newEdition.getIsbn(), newEdition.getEditionNumber(), newEdition.getYear_publication(), newEdition.getLanguage(), newEdition.getPage_number(), newEdition.getCover(), newEdition.getSynopsis(), newEdition.getPublisher().getTradeName(), newEdition.getPhysicalCopies().size());
+    return new BookResponseDTO(
+            newBook.getTitle(),
+            newBook.getGenreSet().stream().map(Genre::getName).toList(),
+            newBook.getAuthorSet().stream().map(Author::getName).toList(),
+            newEdition.getIsbn(),
+            newEdition.getEditionNumber(),
+            newEdition.getYear_publication(),
+            newEdition.getLanguage(),
+            newEdition.getPage_number(),
+            newEdition.getCover(),
+            newEdition.getSynopsis(),
+            newEdition.getPublisher().getTradeName(),
+            newEdition.getPhysicalCopies().size()
+    );
   }
 
-  private void resolveAuthors(BookCreateDTO dto, Book book) {
+  public void updateBook(UUID id, BookRequestDTO dto) {
+    Book book = bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not found"));
+
+    book.setTitle(dto.title());
+    resolveAuthors(dto, book);
+    resolveGenres(dto, book);
+
+    bookRepository.save(book);
+  }
+
+  private List<PhysicalCopy> createPhysicalCopies(int quantity, Edition edition) {
+    List<PhysicalCopy> physicalCopies = new ArrayList<>();
+    for (int i = 0; i < quantity; i++) {
+      PhysicalCopy physicalCopy = new PhysicalCopy(edition);
+      physicalCopies.add(physicalCopy);
+    }
+
+    return physicalCopies;
+  }
+
+  private void resolveAuthors(BookRequestDTO dto, Book book) {
     Set<UUID> authorIds = dto.authorId();
 
     List<Author> authors = authorRepository.findAllById(dto.authorId());
@@ -80,11 +115,11 @@ public class BookService {
     if (authors.size() != authorIds.size()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "One or more of the specified authors were not found in the system");
     }
-    authorRepository.saveAll(authors);
+
     authors.forEach(book::addAuthor);
   }
 
-  private void resolveGenres(BookCreateDTO dto, Book book) {
+  private void resolveGenres(BookRequestDTO dto, Book book) {
     Set<UUID> genreIds = dto.genreId();
 
     List<Genre> genres = genreRepository.findAllById(genreIds);
@@ -96,7 +131,7 @@ public class BookService {
     genres.forEach(book::addGenre);
   }
 
-  private Edition resolveEdition(BookCreateDTO dto, Book book) {
+  private Edition resolveEdition(BookRequestDTO dto, Book book) {
     Edition edition = new Edition();
     edition.setIsbn(dto.edition().isbn());
     edition.setEditionNumber(dto.edition().editionNumber());
@@ -105,13 +140,18 @@ public class BookService {
     edition.setPage_number(dto.edition().pageNumber());
     edition.setCover(dto.edition().urlCover());
     edition.setSynopsis(dto.edition().synopsis());
-    edition.setBook(book);
 
     Publisher publisher = publisherRepository.findById(dto.edition().publisherId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher not found in the system"));
-
     edition.setPublisher(publisher);
-    edition.setBook(book);
-    book.getEditions().add(edition);
+
+    book.addEdition(edition);
+
+    int qtdCopies = dto.edition().initialPhysicalCopies() != null ? dto.edition().initialPhysicalCopies() : 0;
+    for (int i = 0; i < qtdCopies; i++) {
+      PhysicalCopy copy = new PhysicalCopy(edition);
+      edition.addPhysicalCopy(copy);
+    }
+
     return edition;
   }
 }

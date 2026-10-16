@@ -1,12 +1,11 @@
 package com.jcarlos67.biblioneteca.service;
 
-import com.jcarlos67.biblioneteca.dto.create.AuthorCreateDTO;
-import com.jcarlos67.biblioneteca.dto.response.AuthorResponseDTO;
-import com.jcarlos67.biblioneteca.dto.update.AuthorUpdateDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorRequestDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorResponseDTO;
+import com.jcarlos67.biblioneteca.dto.AuthorUpdateRequestDTO;
 import com.jcarlos67.biblioneteca.model.collection.Author;
 import com.jcarlos67.biblioneteca.repository.AuthorRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,9 +30,21 @@ public class AuthorService {
     return author;
   }
 
-  public AuthorResponseDTO createAuthor(AuthorCreateDTO newAuthorDTO) {
-    Author newAuthorEntity = new Author();
-    resolveAuthor(newAuthorDTO, newAuthorEntity);
+  public List<Author> find(String name, String nationality) {
+    if (name != null && nationality != null)
+      return repository.findByNameAndNationality(name, nationality);
+
+    if (name != null)
+      return repository.findByName(name);
+
+    if (nationality != null)
+      return repository.findByNationality(nationality);
+
+    return repository.findAll();
+  }
+
+  public AuthorResponseDTO createAuthor(AuthorRequestDTO newAuthorDTO) {
+    Author newAuthorEntity = newAuthorDTO.mapToAuthor();
 
     repository.save(newAuthorEntity);
 
@@ -41,17 +52,15 @@ public class AuthorService {
   }
 
   public void delete(UUID id) {
-    if (!repository.existsById(id))
-      throw new EntityNotFoundException("Author not found!");
+    Author author = repository.findById(id)
+            .orElseThrow(() ->
+                    new EntityNotFoundException("Author not found")
+            );
 
-    try {
-      repository.deleteById(id);
-    } catch (EmptyResultDataAccessException e) {
-      e.printStackTrace();
-    }
+    repository.deleteById(id);
   }
 
-  public AuthorResponseDTO updateAuthor(UUID id, AuthorUpdateDTO updateDTO) {
+  public void updateAuthor(UUID id, AuthorUpdateRequestDTO updateDTO) {
     Author author = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
 
     author.setName(updateDTO.name());
@@ -59,21 +68,7 @@ public class AuthorService {
     author.setDateOfDeath(updateDTO.dateOfDeath());
     author.setNationality(updateDTO.nationality());
 
-    author = repository.save(author);
-
-    return new AuthorResponseDTO(
-            author.getName(),
-            author.getDateOfBirth(),
-            author.getDateOfDeath(),
-            author.getNationality()
-    );
-  }
-
-  private void resolveAuthor(AuthorCreateDTO authorDTO, Author authorEntity) {
-    authorEntity.setName(authorDTO.name());
-    authorEntity.setDateOfBirth(authorDTO.dateOfBirth());
-    authorEntity.setDateOfDeath(authorDTO.dateOfDeath());
-    authorEntity.setNationality(authorDTO.nationality());
+    repository.save(author);
   }
 
 }

@@ -47,7 +47,6 @@ public class Edition implements Serializable {
   private String cover;
 
   @Column(nullable = false)
-  @Lob
   private String synopsis;
 
   @JsonIgnore
@@ -77,6 +76,11 @@ public class Edition implements Serializable {
     this.synopsis = synopsis;
     this.book = book;
     this.publisher = publisher;
+  }
+
+  public void addPhysicalCopy(PhysicalCopy copy) {
+    this.physicalCopies.add(copy);
+    copy.setEdition(this);
   }
 
   @Override
