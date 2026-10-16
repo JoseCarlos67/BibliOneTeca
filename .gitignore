@@ -79,3 +79,4 @@ pgdata/
 .env.production.local
 backend/src/main/resources/application-local.properties
 .aider*
+.aider*
